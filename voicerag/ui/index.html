@@ -1,0 +1,3232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KnowVox - AI Voice & Career Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       THEME SYSTEM VARIABLES (KnowVox Color Palette)
+       ========================================================================== */
+    
+    /* 1. DEFAULT DARK: Obsidian Glow / Deep Indigo Liquid Cyber */
+    :root, body.theme-dark {
+      --bg-darkest: #050811;
+      --bg-main: #0b0f17;
+      --bg-sidebar: rgba(30, 41, 59, 0.45);
+      --bg-card: rgba(30, 41, 59, 0.45);
+      --bg-card-hover: rgba(255, 255, 255, 0.08);
+      --bg-input: rgba(15, 20, 32, 0.85);
+      --bg-user-bubble: rgba(80, 90, 140, 0.4);
+      --bg-assistant-bubble: rgba(20, 35, 45, 0.6);
+      --border: rgba(255, 255, 255, 0.12);
+      --border-hover: rgba(56, 189, 248, 0.35);
+      --border-accent: #6366f1;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+      --primary: #6366f1;
+      --primary-text: #ffffff;
+      --primary-glow: rgba(99, 102, 241, 0.38);
+      --primary-gradient: linear-gradient(135deg, #4f46e5, #6366f1 55%, #38bdf8);
+      --accent-green: #10b981;
+      --accent-red: #f43f5e;
+      --accent-amber: #f59e0b;
+      --accent-yellow: #fbbf24;
+      --accent-blue: #38bdf8;
+      --accent-cyan: #38bdf8;
+      --accent-violet: #6366f1;
+      --btn-new-chat-bg: linear-gradient(135deg, #4f46e5, #6366f1 55%, #38bdf8);
+      --btn-new-chat-color: #ffffff;
+      --btn-new-chat-border: transparent;
+      --input-dock-bg: rgba(30, 41, 59, 0.45);
+      --input-dock-border: rgba(255, 255, 255, 0.12);
+      --input-dock-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+      --pill-bg: rgba(255, 255, 255, 0.04);
+      --pill-border: rgba(255, 255, 255, 0.12);
+      --pill-color: #f8fafc;
+      --pill-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      --hero-title-color: #ffffff;
+      --top-nav-bg: rgba(30, 41, 59, 0.45);
+      --top-nav-border: rgba(255, 255, 255, 0.12);
+      --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --radius-sm: 6px;
+    }
+
+    /* 2. THEME PEARL: KnowVox Frosted Silver & Slate (from user template) */
+    body.theme-pearl {
+      --bg-darkest: #788b9a;
+      --bg-main: #b9c7d4;
+      --bg-sidebar: rgba(239, 246, 250, 0.42);
+      --bg-card: rgba(239, 246, 250, 0.34);
+      --bg-card-hover: rgba(255, 255, 255, 0.65);
+      --bg-input: rgba(248, 250, 252, 0.42);
+      --bg-user-bubble: rgba(226, 232, 240, 0.55);
+      --bg-assistant-bubble: rgba(20, 35, 45, 0.68);
+      --border: rgba(255, 255, 255, 0.48);
+      --border-hover: rgba(255, 255, 255, 0.7);
+      --border-accent: #67a5b8;
+      --text-main: #172536;
+      --text-muted: #526779;
+      --text-subtle: #64748b;
+      --primary: #2f9eaa;
+      --primary-text: #ffffff;
+      --primary-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(226, 232, 240, 0.3));
+      --accent-green: #10b981;
+      --accent-red: #f43f5e;
+      --accent-amber: #f59e0b;
+      --accent-yellow: #fbbf24;
+      --accent-blue: #2f9eaa;
+      --btn-new-chat-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(226, 232, 240, 0.3));
+      --btn-new-chat-color: #1e293b;
+      --btn-new-chat-border: rgba(255, 255, 255, 0.7);
+      --input-dock-bg: rgba(239, 246, 250, 0.42);
+      --input-dock-border: rgba(255, 255, 255, 0.52);
+      --input-dock-shadow: 0 8px 32px rgba(30, 41, 59, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      --pill-bg: rgba(239, 246, 250, 0.34);
+      --pill-border: rgba(255, 255, 255, 0.48);
+      --pill-color: #26384a;
+      --pill-shadow: 0 4px 14px rgba(51, 65, 85, 0.08);
+      --hero-title-color: #172536;
+      --top-nav-bg: rgba(239, 246, 250, 0.42);
+      --top-nav-border: rgba(255, 255, 255, 0.52);
+      --card-shadow: 0 8px 32px rgba(30, 41, 59, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+
+    /* 3. THEME NEO: Cyber Sand / Neo-Brutalist Tech (Image 2) */
+    body.theme-neo {
+      --bg-darkest: #d1d5db;
+      --bg-main: #e5e8e8;
+      --bg-sidebar: #ebefef;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f8fafc;
+      --bg-input: #ffffff;
+      --bg-user-bubble: #e0f2fe;
+      --bg-assistant-bubble: #ffffff;
+      --border: #1a1a1a;
+      --border-hover: #000000;
+      --border-accent: #1a1a1a;
+      --text-main: #111827;
+      --text-muted: #4b5563;
+      --text-subtle: #6b7280;
+      --primary: #1a73e8;
+      --primary-text: #ffffff;
+      --primary-gradient: linear-gradient(135deg, #d8f044, #e2eb38);
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --accent-amber: #f59e0b;
+      --accent-yellow: #d8f044;
+      --accent-blue: #1a73e8;
+      --btn-new-chat-bg: #d8f044;
+      --btn-new-chat-color: #111827;
+      --btn-new-chat-border: #1a1a1a;
+      --input-dock-bg: #ffffff;
+      --input-dock-border: #1a1a1a;
+      --input-dock-shadow: 3px 4px 0px #1a1a1a;
+      --pill-bg: #ffffff;
+      --pill-border: #1a1a1a;
+      --pill-color: #111827;
+      --pill-shadow: 2px 2px 0px #1a1a1a;
+      --hero-title-color: #111827;
+      --top-nav-bg: #e5e8e8;
+      --top-nav-border: #1a1a1a;
+      --card-shadow: 3px 3px 0px #1a1a1a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease;
+    }
+
+    body {
+      background: var(--bg-main);
+      color: var(--text-main);
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Ambient Liquid Mesh Background */
+    .liquid-mesh-container {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .mesh-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.06;
+      animation: meshFloat 20s ease-in-out infinite alternate;
+    }
+
+    .mesh-1 { width: 550px; height: 550px; background: #6366f1; top: -100px; left: 20%; animation-duration: 22s; }
+    .mesh-2 { width: 650px; height: 650px; background: #4f46e5; bottom: -150px; right: 15%; animation-duration: 26s; animation-delay: -6s; }
+    .mesh-3 { width: 450px; height: 450px; background: #38bdf8; top: 30%; left: 45%; animation-duration: 20s; animation-delay: -12s; }
+    .mesh-4 { width: 400px; height: 400px; background: #06b6d4; bottom: 20%; left: -80px; animation-duration: 24s; }
+
+    body.theme-pearl .mesh-1 { background: #f8fafc; }
+    body.theme-pearl .mesh-2 { background: #64748b; }
+    body.theme-pearl .mesh-3,
+    body.theme-pearl .mesh-4 { background: #67a5b8; }
+
+    @keyframes meshFloat {
+      0% { transform: translate(0px, 0px) scale(1); }
+      50% { transform: translate(60px, -40px) scale(1.18); }
+      100% { transform: translate(-40px, 50px) scale(0.92); }
+    }
+
+    /* ==========================================
+       SIDEBAR
+       ========================================== */
+    .sidebar {
+      width: 310px;
+      background: var(--bg-sidebar);
+      border-right: 1.5px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 16px 14px;
+      gap: 12px;
+      z-index: 10;
+      flex-shrink: 0;
+    }
+
+    body.theme-pearl .sidebar {
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 6px;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+    }
+
+    body.theme-neo .brand-icon {
+      background: #1a73e8;
+      color: #fff;
+      border: 1.5px solid #1a1a1a;
+      box-shadow: 2px 2px 0px #1a1a1a;
+    }
+
+    .brand-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 9px;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: 15.5px;
+      color: var(--hero-title-color);
+      letter-spacing: -0.2px;
+    }
+
+    .brand-badge {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 6px var(--accent-green);
+    }
+
+    /* + New Chat Button */
+    .btn-new-chat {
+      background: var(--btn-new-chat-bg);
+      border: 1.5px solid var(--btn-new-chat-border);
+      color: var(--btn-new-chat-color);
+      padding: 10px 14px;
+      border-radius: var(--radius-lg);
+      font-weight: 700;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: var(--card-shadow);
+      transition: all 0.18s ease;
+    }
+
+    .btn-new-chat:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+    }
+
+    body.theme-neo .btn-new-chat:hover {
+      box-shadow: 4px 4px 0px #1a1a1a;
+      transform: translate(-1px, -1px);
+    }
+
+    .sidebar-scroll {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+    .sidebar-scroll::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    .section-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4px;
+      margin-bottom: 6px;
+    }
+
+    .section-label {
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+    }
+
+    .section-link {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: color 0.15s;
+    }
+
+    .section-link:hover { color: var(--accent-red); }
+
+    /* Conversation List */
+    .conv-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-height: 160px;
+      overflow-y: auto;
+    }
+
+    .conv-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 12.5px;
+      color: var(--text-muted);
+      transition: all 0.15s ease;
+    }
+
+    .conv-item:hover {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border-color: var(--border);
+    }
+
+    .conv-item.active {
+      background: var(--bg-card);
+      color: var(--primary);
+      border-color: var(--border-accent);
+      font-weight: 700;
+    }
+
+    body.theme-neo .conv-item.active {
+      border: 1.5px solid #1a1a1a;
+      box-shadow: 2px 2px 0px #1a1a1a;
+      color: #111827;
+    }
+
+    .conv-item-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .conv-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .conv-del-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      opacity: 0;
+      font-size: 11px;
+    }
+
+    .conv-item:hover .conv-del-btn { opacity: 1; }
+    .conv-del-btn:hover { color: var(--accent-red); background: rgba(248, 113, 113, 0.15); }
+
+    /* Upload Box */
+    .upload-box {
+      border: 1.5px dashed var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 10px;
+      text-align: center;
+      cursor: pointer;
+      background: var(--bg-card);
+      transition: all 0.2s;
+    }
+
+    .upload-box:hover, .upload-box.dragover {
+      border-color: var(--primary);
+      background: var(--bg-card-hover);
+    }
+
+    body.theme-neo .upload-box {
+      border: 1.5px dashed #1a1a1a;
+      box-shadow: 2px 2px 0px #1a1a1a;
+    }
+
+    .upload-box-icon { font-size: 20px; margin-bottom: 2px; }
+    .upload-box-title { font-size: 12px; font-weight: 700; color: var(--text-main); }
+    .upload-box-sub { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+    /* Document List */
+    .doc-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      overflow-y: auto;
+      max-height: 140px;
+    }
+
+    .doc-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      font-size: 12px;
+    }
+
+    body.theme-neo .doc-item {
+      border: 1.5px solid #1a1a1a;
+      box-shadow: 2px 2px 0px #1a1a1a;
+    }
+
+    .doc-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow: hidden;
+    }
+
+    .doc-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 130px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .doc-badge {
+      font-size: 9.5px;
+      background: var(--accent-yellow);
+      color: #111827;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 800;
+      border: 1px solid var(--border);
+    }
+
+    body.theme-dark .doc-badge {
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--accent-green);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+
+    .doc-del-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 11px;
+      padding: 2px 4px;
+    }
+
+    .doc-del-btn:hover { color: var(--accent-red); }
+
+    /* Sidebar Footer */
+    .sidebar-footer {
+      border-top: 1.5px solid var(--border);
+      padding-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .voice-select {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      color: var(--text-main);
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    body.theme-neo .voice-select {
+      border: 1.5px solid #1a1a1a;
+      box-shadow: 2px 2px 0px #1a1a1a;
+    }
+
+    .auto-speak-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+
+    body.theme-neo .auto-speak-row {
+      border: 1.5px solid #1a1a1a;
+      box-shadow: 2px 2px 0px #1a1a1a;
+    }
+
+    .btn-settings-sidebar {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      color: var(--text-main);
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    body.theme-neo .btn-settings-sidebar {
+      border: 1.5px solid #1a1a1a;
+      box-shadow: 2px 2px 0px #1a1a1a;
+    }
+
+    /* ==========================================
+       MAIN CONTAINER & TOP NAVBAR
+       ========================================== */
+    .main-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background: transparent;
+      overflow: hidden;
+    }
+
+    .top-nav {
+      height: 58px;
+      border-bottom: 1.5px solid var(--top-nav-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      background: var(--top-nav-bg);
+      backdrop-filter: blur(12px);
+      z-index: 50;
+    }
+
+    .nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-card);
+      padding: 4px;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+    }
+
+    body.theme-neo .nav-tabs {
+      border: 1.5px solid #1a1a1a;
+      box-shadow: 2px 2px 0px #1a1a1a;
+    }
+
+    .nav-tab {
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-tab:hover { color: var(--text-main); }
+
+    .nav-tab.active {
+      background: var(--primary);
+      color: var(--primary-text);
+    }
+
+    body.theme-dark .nav-tab.active {
+      background: var(--primary-gradient);
+      color: #090a0f;
+      box-shadow: 0 2px 10px rgba(56, 189, 248, 0.35);
+    }
+
+    body.theme-neo .nav-tab.active {
+      background: #d8f044;
+      color: #111827;
+      border: 1.5px solid #1a1a1a;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* THEME SWITCHER PILL IN TOP NAV */
+    .theme-switcher-group {
+      display: flex;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 2px;
+      gap: 2px;
+    }
+
+    body.theme-neo .theme-switcher-group {
+      border: 1.5px solid #1a1a1a;
+      box-shadow: 2px 2px 0px #1a1a1a;
+    }
+
+    .theme-btn {
+      background: transparent;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 16px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s;
+    }
+
+    .theme-btn.active {
+      background: var(--primary);
+      color: var(--primary-text);
+    }
+
+    body.theme-dark .theme-btn.active {
+      background: var(--primary-gradient);
+      color: #090a0f;
+    }
+
+    body.theme-neo .theme-btn.active {
+      background: #d8f044;
+      color: #111827;
+      border: 1px solid #1a1a1a;
+    }
+
+    .btn-live-call {
+      background: var(--primary-gradient);
+      color: #090a0f;
+      font-weight: 800;
+      padding: 7px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      transition: all 0.2s;
+    }
+
+    body.theme-pearl .btn-live-call {
+      background: #ffffff;
+      color: #0284c7;
+      border: 1px solid rgba(203, 213, 225, 0.9);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    body.theme-neo .btn-live-call {
+      background: #1a73e8;
+      color: #ffffff;
+      border: 1.5px solid #1a1a1a;
+      box-shadow: 2px 2px 0px #1a1a1a;
+    }
+
+    .btn-live-call:hover { transform: scale(1.03); }
+
+    /* ==========================================
+       CHAT FEED & MESSAGES
+       ========================================== */
+    .view-panel {
+      flex: 1;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .view-panel.active { display: flex; }
+
+    .chat-feed {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 28px 120px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      scroll-behavior: smooth;
+    }
+
+    .chat-feed::-webkit-scrollbar { width: 6px; }
+    .chat-feed::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .msg-row {
+      display: flex;
+      gap: 12px;
+      max-width: 860px;
+      margin: 0 auto;
+      width: 100%;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-row.user { justify-content: flex-end; }
+    .msg-row.assistant { justify-content: flex-start; }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+    }
+
+    .avatar.user {
+      background: #334155;
+      color: #fff;
+    }
+
+    body.theme-neo .avatar.user {
+      background: #111827;
+      color: #fff;
+      border: 1.5px solid #1a1a1a;
+    }
+
+    .avatar.assistant {
+      background: var(--bg-card);
+      overflow: hidden;
+    }
+
+    body.theme-neo .avatar.assistant {
+      border: 1.5px solid #1a1a1a;
+    }
+
+    .bubble {
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      line-height: 1.6;
+      max-width: 760px;
+      word-break: break-word;
+      box-shadow: var(--card-shadow);
+    }
+
+    .msg-row.user .bubble {
+      background: var(--bg-user-bubble);
+      color: var(--text-main);
+      border-top-right-radius: 4px;
+    }
+
+    body.theme-neo .msg-row.user .bubble {
+      border: 1.5px solid #1a1a1a;
+      box-shadow: 2px 2px 0px #1a1a1a;
+    }
+
+    .msg-row.assistant .bubble {
+      background: var(--bg-assistant-bubble);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      border-top-left-radius: 4px;
+    }
+
+    body.theme-neo .msg-row.assistant .bubble {
+      border: 1.5px solid #1a1a1a;
+      box-shadow: 3px 3px 0px #1a1a1a;
+    }
+
+    .bubble p { margin-bottom: 8px; }
+    .bubble p:last-child { margin-bottom: 0; }
+    .bubble ul, .bubble ol { margin-left: 18px; margin-bottom: 8px; }
+    .bubble li { margin-bottom: 4px; }
+    .bubble strong { color: var(--hero-title-color); }
+    .bubble code {
+      background: rgba(0, 0, 0, 0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-family: Consolas, monospace;
+      color: var(--primary);
+    }
+
+    body.theme-dark .bubble code { background: rgba(0, 0, 0, 0.45); }
+
+    .thinking-bubble {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--primary);
+      font-size: 13.5px;
+      font-weight: 600;
+    }
+
+    .thinking-spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(56, 189, 248, 0.25);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .sources-box {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .source-chip {
+      font-size: 11px;
+      background: var(--bg-card);
+      color: var(--primary);
+      padding: 4px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    body.theme-neo .source-chip {
+      border: 1.5px solid #1a1a1a;
+      box-shadow: 1.5px 1.5px 0px #1a1a1a;
+      color: #111827;
+      background: #d8f044;
+    }
+
+    .source-chip:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.1);
+    }
+
+    .msg-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .audio-play-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 4px 12px;
+      border-radius: 14px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    body.theme-neo .audio-play-btn {
+      border: 1.5px solid #1a1a1a;
+      box-shadow: 2px 2px 0px #1a1a1a;
+    }
+
+    .audio-play-btn.playing {
+      background: var(--primary);
+      color: var(--primary-text);
+      font-weight: 700;
+    }
+
+    /* ==========================================
+       HERO & SUGGESTIONS
+       ========================================== */
+    .empty-hero {
+      margin: auto;
+      text-align: center;
+      max-width: 580px;
+      padding: 40px 20px;
+    }
+
+    .hero-sparkle {
+      font-size: 32px;
+      margin-bottom: 12px;
+      display: inline-block;
+      animation: floatSparkle 3s ease-in-out infinite;
+    }
+
+    @keyframes floatSparkle {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-6px) rotate(8deg); }
+    }
+
+    .hero-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--hero-title-color);
+      margin-bottom: 10px;
+      letter-spacing: -0.4px;
+    }
+
+    .hero-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .prompt-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .pill {
+      background: var(--pill-bg);
+      border: 1.5px solid var(--pill-border);
+      color: var(--pill-color);
+      padding: 9px 16px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: var(--pill-shadow);
+      transition: all 0.18s ease;
+    }
+
+    .pill:hover {
+      border-color: var(--primary);
+      color: var(--text-main);
+      transform: translateY(-2px);
+    }
+
+    body.theme-neo .pill:hover {
+      box-shadow: 4px 4px 0px #1a1a1a;
+      transform: translate(-1px, -1px);
+    }
+
+    /* ==========================================
+       FLOATING INPUT DOCK
+       ========================================== */
+    .input-wrapper {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 60px);
+      max-width: 860px;
+      background: var(--input-dock-bg);
+      border: 1.5px solid var(--input-dock-border);
+      border-radius: 32px;
+      padding: 6px 12px 6px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--input-dock-shadow);
+      z-index: 20;
+    }
+
+    body.theme-pearl .input-wrapper {
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .chat-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-main);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .chat-input::placeholder { color: var(--text-muted); }
+
+    .btn-attach {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    body.theme-neo .btn-attach {
+      border: 1.5px solid #1a1a1a;
+      box-shadow: 1.5px 1.5px 0px #1a1a1a;
+      color: #111827;
+    }
+
+    .action-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: transform 0.15s, filter 0.2s;
+    }
+
+    .action-btn:hover { transform: scale(1.06); }
+
+    /* Mic Button Styles */
+    .btn-mic {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+    }
+
+    body.theme-neo .btn-mic {
+      background: #d8f044;
+      color: #111827;
+      border: 1.5px solid #1a1a1a;
+      box-shadow: 2px 2px 0px #1a1a1a;
+    }
+
+    /* Send Button Styles */
+    .btn-send {
+      background: var(--primary);
+      color: var(--primary-text);
+      font-weight: bold;
+    }
+
+    body.theme-neo .btn-send {
+      background: #1a73e8;
+      color: #ffffff;
+      border: 1.5px solid #1a1a1a;
+      box-shadow: 2px 2px 0px #1a1a1a;
+    }
+
+    body.theme-dark .btn-send {
+      background: var(--primary);
+      color: #090a0f;
+    }
+
+    /* ==========================================
+       CAREER OS HUB & VAULT
+       ========================================== */
+    .career-hub-view, .vault-view {
+      padding: 28px 36px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 960px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .career-hub-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px 26px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .career-user-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--hero-title-color);
+    }
+
+    .career-user-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .career-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .career-card, .vault-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: var(--card-shadow);
+    }
+
+    body.theme-neo .career-card, body.theme-neo .vault-card {
+      border: 1.5px solid #1a1a1a;
+      box-shadow: 3px 3px 0px #1a1a1a;
+    }
+
+    .career-card-label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--primary);
+    }
+
+    .career-card-val {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--hero-title-color);
+    }
+
+    .career-actions-row { display: flex; gap: 12px; margin-top: 8px; }
+
+    .btn-career-action {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: var(--card-shadow);
+      transition: all 0.2s;
+    }
+
+    body.theme-neo .btn-career-action {
+      border: 1.5px solid #1a1a1a;
+      box-shadow: 2.5px 2.5px 0px #1a1a1a;
+    }
+
+    .btn-career-action:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+
+    .vault-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    /* ==========================================
+       LIVE VOICE CALL OVERLAY & MODALS
+       ========================================== */
+    .live-call-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, #172033 0%, #090b10 100%);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 30px 24px;
+      z-index: 150;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .live-call-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .live-call-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.4px;
+    }
+
+    .live-call-sub {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      max-width: 520px;
+      line-height: 1.5;
+    }
+
+    .badge-live-call {
+      background: rgba(248, 113, 113, 0.2);
+      color: #f87171;
+      padding: 6px 14px;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 11px;
+    }
+
+    .badge-grounded-call {
+      font-size: 12px;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 5px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .live-transcript-box {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      min-height: 96px;
+      max-height: 150px;
+      overflow-y: auto;
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: #e2e8f0;
+      text-align: left;
+    }
+
+    .btn-end-call {
+      background: #ef4444 !important;
+      color: #ffffff !important;
+      border: none !important;
+      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4) !important;
+    }
+
+    .btn-end-call:hover {
+      background: #dc2626 !important;
+      transform: translateY(-1px);
+    }
+
+    .live-orb {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: var(--primary-gradient);
+      box-shadow: 0 0 60px rgba(56, 189, 248, 0.6);
+      transition: all 0.35s ease;
+      cursor: pointer;
+    }
+
+    .live-orb.listening {
+      background: linear-gradient(135deg, #00f2fe, #4facfe, #38bdf8);
+      animation: listening-breathe 1.8s infinite alternate;
+    }
+
+    .live-orb.thinking {
+      background: linear-gradient(135deg, #f093fb, #f5576c, #818cf8);
+      animation: spin-pulse 1.2s infinite linear;
+    }
+
+    .live-orb.speaking {
+      background: linear-gradient(135deg, #43e97b, #38f9d7, #38bdf8);
+      animation: speak-wave 1.1s infinite alternate;
+    }
+
+    @keyframes listening-breathe {
+      0% { transform: scale(0.95); box-shadow: 0 0 40px rgba(79, 172, 254, 0.5); }
+      100% { transform: scale(1.12); box-shadow: 0 0 90px rgba(79, 172, 254, 0.95); }
+    }
+
+    @keyframes spin-pulse {
+      0% { transform: rotate(0deg) scale(0.96); }
+      50% { transform: rotate(180deg) scale(1.08); }
+      100% { transform: rotate(360deg) scale(0.96); }
+    }
+
+    @keyframes speak-wave {
+      0% { transform: scale(1.0); box-shadow: 0 0 50px rgba(67, 233, 123, 0.6); }
+      100% { transform: scale(1.2); box-shadow: 0 0 110px rgba(67, 233, 123, 1); }
+    }
+
+    /* Modal Styling */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-backdrop.active { opacity: 1; pointer-events: auto; }
+
+    .modal-card {
+      background: var(--bg-sidebar);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      width: 480px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    body.theme-neo .modal-card {
+      border: 2px solid #1a1a1a;
+      box-shadow: 6px 6px 0px #1a1a1a;
+      background: #ffffff;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .modal-title { font-size: 17px; font-weight: 800; color: var(--hero-title-color); }
+    .modal-close { background: transparent; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .form-label { font-size: 12px; font-weight: 700; color: var(--text-muted); }
+    
+    .form-input, .form-select {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      color: var(--text-main);
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      outline: none;
+    }
+
+    body.theme-neo .form-input, body.theme-neo .form-select {
+      border: 1.5px solid #1a1a1a;
+    }
+
+    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 12.5px;
+      font-weight: 700;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border: 1.5px solid var(--border);
+      color: var(--primary-text);
+      padding: 8px 18px;
+      border-radius: var(--radius-sm);
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 12.5px;
+    }
+
+    body.theme-neo .btn-primary {
+      background: #d8f044;
+      color: #111827;
+      border: 1.5px solid #1a1a1a;
+      box-shadow: 2px 2px 0px #1a1a1a;
+    }
+
+    /* Visual Theme Selector Card Options in Settings */
+    .theme-picker-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .theme-picker-card {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 8px;
+      text-align: center;
+      cursor: pointer;
+      background: var(--bg-card);
+      transition: all 0.18s;
+    }
+
+    .theme-picker-card:hover { transform: translateY(-2px); border-color: var(--primary); }
+    .theme-picker-card.active { border-color: var(--primary); border-width: 2px; font-weight: 800; background: var(--bg-card-hover); }
+    .theme-preview-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      margin: 0 auto 6px auto;
+      border: 1px solid rgba(0,0,0,0.2);
+    }
+
+    /* ==========================================
+       THEME PEARL - FROSTED SILVER & SLATE ENHANCEMENTS (From User Template)
+       ========================================== */
+    body.theme-pearl {
+      background: #b9c7d4 !important;
+      background-image:
+        radial-gradient(at 0% 0%, rgba(255, 255, 255, 0.58) 0px, transparent 48%),
+        radial-gradient(at 100% 100%, rgba(71, 110, 133, 0.28) 0px, transparent 52%),
+        linear-gradient(135deg, #dce5ec 0%, #aab9c7 48%, #788b9a 100%) !important;
+      background-attachment: fixed !important;
+      color: #1e293b;
+    }
+
+    body.theme-pearl .sidebar,
+    body.theme-pearl .top-nav,
+    body.theme-pearl .modal-card,
+    body.theme-pearl .input-wrapper {
+      background: rgba(239, 246, 250, 0.42) !important;
+      border-color: rgba(255, 255, 255, 0.52) !important;
+      box-shadow: 0 8px 32px rgba(30, 41, 59, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+      backdrop-filter: blur(20px) saturate(120%);
+      -webkit-backdrop-filter: blur(20px) saturate(120%);
+    }
+
+    body.theme-pearl .brand-icon {
+      background: rgba(241, 245, 249, 0.56);
+      border: 1px solid rgba(255, 255, 255, 0.66);
+    }
+
+    body.theme-pearl .brand-title,
+    body.theme-pearl .hero-title,
+    body.theme-pearl .modal-title,
+    body.theme-pearl .bubble strong {
+      color: #172536 !important;
+    }
+
+    body.theme-pearl .brand-badge,
+    body.theme-pearl .section-label,
+    body.theme-pearl .form-label,
+    body.theme-pearl .hero-sub,
+    body.theme-pearl .upload-sub,
+    body.theme-pearl .text-muted {
+      color: #526779 !important;
+    }
+
+    body.theme-pearl .btn-new-chat,
+    body.theme-pearl .btn-career-action,
+    body.theme-pearl .btn-live-call,
+    body.theme-pearl .conv-item.active,
+    body.theme-pearl .nav-tab.active {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(226, 232, 240, 0.3)) !important;
+      border: 1px solid rgba(255, 255, 255, 0.7) !important;
+      color: #1e293b !important;
+      box-shadow: 0 8px 22px rgba(51, 65, 85, 0.18) !important;
+    }
+
+    body.theme-pearl .btn-new-chat:hover,
+    body.theme-pearl .btn-career-action:hover,
+    body.theme-pearl .btn-live-call:hover,
+    body.theme-pearl .conv-item.active:hover {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(186, 230, 253, 0.38)) !important;
+      box-shadow: 0 0 22px rgba(103, 165, 184, 0.32) !important;
+    }
+
+    body.theme-pearl .conv-item,
+    body.theme-pearl .doc-item,
+    body.theme-pearl .upload-box,
+    body.theme-pearl .btn-settings-sidebar,
+    body.theme-pearl .auto-speak-row,
+    body.theme-pearl .nav-tabs,
+    body.theme-pearl .theme-switcher-group,
+    body.theme-pearl .career-card,
+    body.theme-pearl .vault-card {
+      background: rgba(239, 246, 250, 0.34) !important;
+      border-color: rgba(255, 255, 255, 0.48) !important;
+      color: #26384a !important;
+    }
+
+    body.theme-pearl .nav-tab {
+      color: #526779;
+    }
+
+    body.theme-pearl .hero-sparkle {
+      font-size: 38px;
+      filter: drop-shadow(0 8px 14px rgba(47, 158, 170, 0.35));
+    }
+
+    body.theme-pearl .pill {
+      background: rgba(239, 246, 250, 0.42);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.52);
+      box-shadow: 0 4px 14px rgba(51, 65, 85, 0.08);
+      color: #26384a;
+      font-weight: 600;
+    }
+
+    body.theme-pearl .pill:hover {
+      background: rgba(255, 255, 255, 0.8);
+      border-color: #2f9eaa;
+      color: #172536;
+      box-shadow: 0 0 20px rgba(103, 165, 184, 0.3);
+      transform: translateY(-2px);
+    }
+
+    body.theme-pearl .voice-select,
+    body.theme-pearl .chat-input,
+    body.theme-pearl .chat-input::placeholder {
+      color: #30465a !important;
+    }
+
+    body.theme-pearl .msg-row.assistant .bubble {
+      background: rgba(255, 255, 255, 0.88) !important;
+      border: 1px solid rgba(255, 255, 255, 0.95) !important;
+      color: #172536 !important;
+      box-shadow: 0 6px 20px rgba(51, 65, 85, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    body.theme-pearl .msg-row.assistant .bubble p,
+    body.theme-pearl .msg-row.assistant .bubble li,
+    body.theme-pearl .msg-row.assistant .bubble span {
+      color: #1e293b !important;
+    }
+
+    body.theme-pearl .msg-row.assistant .bubble strong {
+      color: #0f172a !important;
+      font-weight: 800 !important;
+    }
+
+    body.theme-pearl .msg-row.user .bubble {
+      background: rgba(226, 232, 240, 0.75) !important;
+      border: 1px solid rgba(255, 255, 255, 0.85) !important;
+      color: #172536 !important;
+      box-shadow: 0 4px 14px rgba(51, 65, 85, 0.1) !important;
+    }
+
+    body.theme-pearl .msg-row.user .bubble strong {
+      color: #0f172a !important;
+      font-weight: 800 !important;
+    }
+
+    body.theme-pearl .bubble code {
+      background: rgba(47, 158, 170, 0.12) !important;
+      color: #0e7490 !important;
+      border: 1px solid rgba(47, 158, 170, 0.25) !important;
+    }
+
+    body.theme-pearl .avatar.assistant,
+    body.theme-pearl .avatar.user,
+    body.theme-pearl .btn-mic,
+    body.theme-pearl .btn-send,
+    body.theme-pearl .btn-attach {
+      background: rgba(241, 245, 249, 0.56) !important;
+      border: 1px solid rgba(255, 255, 255, 0.66) !important;
+      color: #26384a !important;
+      box-shadow: 0 4px 14px rgba(51, 65, 85, 0.16) !important;
+    }
+
+    body.theme-pearl .audio-play-btn {
+      background: rgba(239, 246, 250, 0.65) !important;
+      border: 1px solid rgba(255, 255, 255, 0.8) !important;
+      color: #172536 !important;
+      font-weight: 700 !important;
+      box-shadow: 0 2px 8px rgba(51, 65, 85, 0.08) !important;
+    }
+
+    body.theme-pearl .audio-play-btn:hover {
+      background: rgba(255, 255, 255, 0.95) !important;
+      color: #0e7490 !important;
+    }
+
+    body.theme-pearl .source-chip {
+      background: rgba(14, 116, 144, 0.1) !important;
+      border: 1px solid rgba(14, 116, 144, 0.28) !important;
+      color: #0e7490 !important;
+      font-weight: 700 !important;
+    }
+
+    /* Theme Neo: Message Bubbles & Elements */
+    body.theme-neo .msg-row.assistant .bubble {
+      background: #ffffff !important;
+      border: 2px solid #1a1a1a !important;
+      box-shadow: 4px 4px 0px #1a1a1a !important;
+      color: #111827 !important;
+    }
+
+    body.theme-neo .msg-row.assistant .bubble p,
+    body.theme-neo .msg-row.assistant .bubble li,
+    body.theme-neo .msg-row.assistant .bubble span,
+    body.theme-neo .msg-row.assistant .bubble strong {
+      color: #111827 !important;
+    }
+
+    body.theme-neo .msg-row.user .bubble {
+      background: #fef08a !important;
+      border: 2px solid #1a1a1a !important;
+      box-shadow: 3px 3px 0px #1a1a1a !important;
+      color: #111827 !important;
+    }
+
+    body.theme-neo .msg-row.user .bubble strong {
+      color: #111827 !important;
+    }
+
+    body.theme-neo .bubble code {
+      background: #e5e7eb !important;
+      color: #111827 !important;
+      border: 1.5px solid #1a1a1a !important;
+      font-weight: 700 !important;
+    }
+
+    body.theme-neo .source-chip {
+      background: #dbeafe !important;
+      color: #1e40af !important;
+      border: 1.5px solid #1a1a1a !important;
+      box-shadow: 2px 2px 0px #1a1a1a !important;
+    }
+
+    body.theme-neo .audio-play-btn {
+      background: #ffffff !important;
+      color: #111827 !important;
+      border: 1.5px solid #1a1a1a !important;
+      box-shadow: 2px 2px 0px #1a1a1a !important;
+    }
+
+    /* Theme Pearl: Live Call & Push-to-Talk Overlay */
+    body.theme-pearl .live-call-overlay {
+      background: radial-gradient(at 0% 0%, rgba(255, 255, 255, 0.85) 0px, transparent 48%),
+                  radial-gradient(at 100% 100%, rgba(71, 110, 133, 0.35) 0px, transparent 52%),
+                  linear-gradient(135deg, rgba(220, 229, 236, 0.94) 0%, rgba(170, 185, 199, 0.94) 100%) !important;
+      backdrop-filter: blur(35px) saturate(140%) !important;
+      -webkit-backdrop-filter: blur(35px) saturate(140%) !important;
+      color: #1e293b;
+    }
+
+    body.theme-pearl .live-call-title {
+      color: #172536 !important;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+    }
+
+    body.theme-pearl .live-call-sub {
+      color: #526779 !important;
+    }
+
+    body.theme-pearl .badge-live-call {
+      background: rgba(239, 68, 68, 0.14) !important;
+      color: #dc2626 !important;
+      border: 1px solid rgba(239, 68, 68, 0.3) !important;
+    }
+
+    body.theme-pearl .badge-grounded-call {
+      background: rgba(255, 255, 255, 0.65) !important;
+      color: #172536 !important;
+      border: 1px solid rgba(255, 255, 255, 0.85) !important;
+      box-shadow: 0 2px 8px rgba(51, 65, 85, 0.08) !important;
+    }
+
+    body.theme-pearl .live-transcript-box {
+      background: rgba(239, 246, 250, 0.65) !important;
+      border: 1px solid rgba(255, 255, 255, 0.75) !important;
+      color: #172536 !important;
+      box-shadow: 0 8px 30px rgba(30, 41, 59, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+      backdrop-filter: blur(20px);
+    }
+
+    body.theme-pearl .transcript-placeholder {
+      color: #64748b !important;
+    }
+
+    /* Theme Neo: Live Call & Push-to-Talk Overlay */
+    body.theme-neo .live-call-overlay {
+      background: #e5e8e8 !important;
+      backdrop-filter: blur(10px) !important;
+      -webkit-backdrop-filter: blur(10px) !important;
+      color: #111827 !important;
+    }
+
+    body.theme-neo .live-call-title {
+      color: #111827 !important;
+    }
+
+    body.theme-neo .live-call-sub {
+      color: #4b5563 !important;
+    }
+
+    body.theme-neo .badge-live-call {
+      background: #fee2e2 !important;
+      color: #991b1b !important;
+      border: 1.5px solid #1a1a1a !important;
+      box-shadow: 2px 2px 0px #1a1a1a !important;
+    }
+
+    body.theme-neo .badge-grounded-call {
+      background: #ffffff !important;
+      color: #111827 !important;
+      border: 1.5px solid #1a1a1a !important;
+      box-shadow: 2px 2px 0px #1a1a1a !important;
+    }
+
+    body.theme-neo .live-transcript-box {
+      background: #ffffff !important;
+      border: 2px solid #1a1a1a !important;
+      box-shadow: 4px 4px 0px #1a1a1a !important;
+      color: #111827 !important;
+    }
+
+    body.theme-neo .transcript-placeholder {
+      color: #6b7280 !important;
+    }
+
+    body.theme-neo .live-orb {
+      box-shadow: 4px 4px 0px #1a1a1a, 0 0 40px rgba(216, 240, 68, 0.5) !important;
+    }
+
+    /* Mobile Phone Responsiveness */
+    @media (max-width: 768px) {
+      body {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        height: 100vh !important;
+      }
+      .sidebar {
+        display: none !important;
+      }
+      .main-container {
+        width: 100vw !important;
+        min-width: 100vw !important;
+        height: 100vh !important;
+      }
+      .top-nav {
+        padding: 8px 10px !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+        height: auto !important;
+      }
+      .nav-tabs {
+        width: 100% !important;
+        justify-content: space-between !important;
+      }
+      .nav-tab {
+        padding: 6px 10px !important;
+        font-size: 11.5px !important;
+      }
+      .nav-right {
+        width: 100% !important;
+        justify-content: space-between !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+      }
+      .input-dock {
+        width: calc(100% - 20px) !important;
+        left: 10px !important;
+        transform: none !important;
+        bottom: 12px !important;
+        padding: 8px 12px !important;
+      }
+      .prompt-pills {
+        flex-direction: column !important;
+        align-items: stretch !important;
+      }
+      .pill {
+        width: 100% !important;
+      }
+      .empty-hero {
+        padding: 16px 12px !important;
+        margin-bottom: 90px !important;
+      }
+      .hero-title {
+        font-size: 20px !important;
+      }
+      .hero-sub {
+        font-size: 12.5px !important;
+      }
+    }
+  </style>
+</head>
+<body class="theme-dark">
+
+  <!-- Ambient Liquid Mesh Canvas -->
+  <div class="liquid-mesh-container">
+    <div class="mesh-blob mesh-1"></div>
+    <div class="mesh-blob mesh-2"></div>
+    <div class="mesh-blob mesh-3"></div>
+    <div class="mesh-blob mesh-4"></div>
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">
+        <img src="logo.jpeg" alt="KnowVox Logo" class="brand-logo-img">
+      </div>
+      <div class="brand-text">
+        <div class="brand-title">KnowVox</div>
+        <div class="brand-badge">
+          <span class="status-dot"></span>
+          <span>Voice & Career AI</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-new-chat" onclick="startNewChat()">
+      <span>+</span> New Voice Session
+    </button>
+
+    <div class="sidebar-scroll">
+      <!-- Recent Chats -->
+      <div>
+        <div class="section-title-row">
+          <span class="section-label">Voice History</span>
+        </div>
+        <div class="conv-list" id="convList">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Scoped Knowledge Base -->
+      <div class="docs-panel">
+        <div class="section-title-row">
+          <span class="section-label">Knowledge Base</span>
+          <button class="section-link" onclick="clearAllDocs()">Clear All</button>
+        </div>
+
+        <div class="upload-box" id="uploadBox" onclick="triggerFileUpload()">
+          <div class="upload-box-icon">📄</div>
+          <div class="upload-box-title" id="uploadText">Upload / Drop Files</div>
+          <div class="upload-box-sub" id="uploadSub">PDF, TXT, MD, CSV, JSON</div>
+          <input type="file" id="fileInput" accept=".pdf,.txt,.md,.csv,.json" multiple style="display:none;" onchange="handleFileSelected(event)">
+        </div>
+
+        <div class="doc-list" id="docList">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="section-label">Voice Accent</div>
+      <select class="voice-select" id="voiceSelect" onchange="onVoiceChanged()">
+        <option value="en-US-JennyNeural">🇺🇸 Jenny (US Female)</option>
+        <option value="en-US-GuyNeural">🇺🇸 Guy (US Male)</option>
+        <option value="en-IN-NeerjaNeural">🇮🇳 Neerja (Indian Female)</option>
+        <option value="en-IN-PrabhatNeural">🇮🇳 Prabhat (Indian Male)</option>
+        <option value="en-GB-SoniaNeural">🇬🇧 Sonia (British Female)</option>
+      </select>
+
+      <div class="auto-speak-row">
+        <label for="autoSpeakToggle" style="font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+          <span id="autoSpeakIcon">🔊</span> Speak Out Loud
+        </label>
+        <input type="checkbox" id="autoSpeakToggle" checked onchange="toggleAutoSpeak(this.checked)" style="cursor: pointer; accent-color: var(--primary);">
+      </div>
+
+      <button class="btn-settings-sidebar" onclick="openSettingsModal()">
+        ⚙️ Settings & API Key
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Container -->
+  <main class="main-container">
+    <header class="top-nav">
+      <div class="nav-tabs">
+        <button class="nav-tab active" id="tabChat" onclick="switchView('chat')">
+          💬 Voice AI Chat
+        </button>
+        <button class="nav-tab" id="tabCareer" onclick="switchView('career')">
+          👤 Career OS
+        </button>
+        <button class="nav-tab" id="tabVault" onclick="switchView('vault')">
+          📚 Knowledge Base
+        </button>
+      </div>
+
+      <!-- Theme Switcher & Voice Accent Selector in Top Navbar -->
+      <div class="nav-right">
+        <select class="form-select" id="topVoiceSelect" onchange="changeVoice(this.value)" style="padding: 5px 10px; font-size: 11.5px; border-radius: 8px; width: auto; max-width: 155px; height: 32px; background: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); cursor: pointer;" title="Select AI Voice Accent">
+          <option value="en-IN-NeerjaNeural" selected>🇮🇳 Neerja (Indian)</option>
+          <option value="en-IN-PrabhatNeural">🇮🇳 Prabhat (Indian)</option>
+          <option value="en-US-JennyNeural">🇺🇸 Jenny (US)</option>
+          <option value="en-US-GuyNeural">🇺🇸 Guy (US)</option>
+          <option value="en-GB-SoniaNeural">🇬🇧 Sonia (UK)</option>
+        </select>
+
+        <div class="theme-switcher-group" title="Switch App Theme">
+          <button class="theme-btn active" id="btnThemeDark" onclick="setTheme('dark')">🌙 Dark</button>
+          <button class="theme-btn" id="btnThemePearl" onclick="setTheme('pearl')">☁️ Pearl</button>
+          <button class="theme-btn" id="btnThemeNeo" onclick="setTheme('neo')">⚡ Cyber</button>
+        </div>
+
+        <button class="btn-live-call" onclick="startLiveVoiceCall()">
+          📞 Live Call
+        </button>
+        <button class="btn-settings-sidebar" style="padding: 6px 12px;" onclick="openSettingsModal()">
+          ⚙️ Settings
+        </button>
+      </div>
+    </header>
+
+    <!-- VIEW 1: CHAT FEED -->
+    <div class="view-panel active" id="viewChat">
+      <div class="chat-feed" id="chatFeed">
+        <div class="empty-hero" id="emptyHero">
+          <div class="hero-sparkle">✨</div>
+          <h1 class="hero-title" id="heroDynamicTitle">Voice Knowledge Retrieval</h1>
+          <p class="hero-sub" id="heroDynamicSub">Speak or ask anything about your documents. I ground every response in your uploaded knowledge base and synthesize natural spoken answers.</p>
+          <div class="prompt-pills">
+            <div class="pill" onclick="sendQuickPrompt('What is the summary of this document?')">"What is the summary of this document?"</div>
+            <div class="pill" onclick="sendQuickPrompt('What are the key technical skills mentioned?')">"What are the key technical skills mentioned?"</div>
+            <div class="pill" onclick="sendQuickPrompt('What is the education background?')">"What is the education background?"</div>
+            <div class="pill" onclick="sendQuickPrompt('Extract actionable steps or recommendations')">"Extract actionable steps or recommendations"</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-wrapper">
+        <button class="btn-attach" title="Attach Document" onclick="triggerFileUpload()">+</button>
+        <input type="text" class="chat-input" id="chatInput" placeholder="Ask anything about your documents or speak..." onkeydown="handleKeyPress(event)">
+        <button class="btn-career-action" style="padding: 6px 14px; border-radius: 20px; font-size: 12px;" onclick="startLiveVoiceCall()">
+          🎙️ Live Call Mode
+        </button>
+        <button class="action-btn btn-mic" id="micBtn" title="Push-to-Talk" onclick="startVoiceRecording()">🎤</button>
+        <button class="action-btn btn-send" title="Send" onclick="submitTextQuery()">➤</button>
+      </div>
+    </div>
+
+    <!-- VIEW 2: CAREER OS HUB -->
+    <div class="view-panel" id="viewCareer">
+      <div class="career-hub-view">
+        <div class="career-hub-header">
+          <div>
+            <div class="career-user-title" id="careerProfileName">Career OS Profile</div>
+            <div class="career-user-sub" id="careerProfileGoal">Goal: Software Engineer | B.Tech</div>
+          </div>
+          <button class="btn-career-action" onclick="openEditProfileModal()">✏️ Edit Profile</button>
+        </div>
+
+        <div class="career-grid">
+          <div class="career-card">
+            <span class="career-card-label">Education</span>
+            <span class="career-card-val" id="profileEducation">Not specified yet</span>
+          </div>
+          <div class="career-card">
+            <span class="career-card-label">Primary Skills</span>
+            <span class="career-card-val" id="profileSkills">Not specified yet</span>
+          </div>
+          <div class="career-card">
+            <span class="career-card-label">Career Goal</span>
+            <span class="career-card-val" id="profileGoal">Not specified yet</span>
+          </div>
+          <div class="career-card">
+            <span class="career-card-label">Experience & Interests</span>
+            <span class="career-card-val" id="profileExp">Not specified yet</span>
+          </div>
+        </div>
+
+        <div class="career-actions-row">
+          <button class="btn-career-action" onclick="generateCareerStrategy()">🎯 Generate AI Career Roadmap</button>
+          <button class="btn-career-action" onclick="practiceInterview()">🎤 Start AI Mock Interview</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: KNOWLEDGE VAULT -->
+    <div class="view-panel" id="viewVault">
+      <div class="vault-view">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
+          <div>
+            <h2 style="font-size: 18px; font-weight: 800; color: var(--hero-title-color); margin: 0;">Knowledge Base Documents</h2>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Upload PDFs or notes to ground your voice conversations in verified facts.</div>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <button class="btn-career-action" style="background: rgba(239, 68, 68, 0.12); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3);" onclick="clearAllDocs()">🗑️ Clear All Files</button>
+            <button class="btn-career-action" onclick="triggerFileUpload()">+ Upload Documents</button>
+          </div>
+        </div>
+        <div class="vault-grid" id="vaultGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Push-To-Talk Overlay -->
+    <div class="live-call-overlay" id="pttOverlay">
+      <div style="margin: auto; text-align: center;">
+        <div class="live-orb listening" style="margin: 0 auto 20px auto;"></div>
+        <div class="live-call-title" id="pttStatus">Listening to your voice...</div>
+        <div class="live-call-sub" id="pttTimer">Speak now (5 seconds)</div>
+      </div>
+    </div>
+
+    <!-- Live Voice-to-Voice Call Modal -->
+    <div class="live-call-overlay" id="liveCallModal">
+      <div style="width: 100%; max-width: 740px; display: flex; justify-content: space-between; align-items: center;">
+        <span class="badge-live-call">● LIVE VOICE CALL</span>
+        <select class="form-select" id="liveCallVoiceSelect" onchange="changeVoice(this.value)" style="padding: 4px 10px; font-size: 11.5px; border-radius: 20px; width: auto; background: rgba(15, 23, 42, 0.7); color: #fff; border: 1px solid rgba(255,255,255,0.25); cursor: pointer;" title="Change Voice Accent">
+          <option value="en-IN-NeerjaNeural" selected>🇮🇳 Neerja (Indian Female)</option>
+          <option value="en-IN-PrabhatNeural">🇮🇳 Prabhat (Indian Male)</option>
+          <option value="en-US-JennyNeural">🇺🇸 Jenny (US Female)</option>
+          <option value="en-US-GuyNeural">🇺🇸 Guy (US Male)</option>
+          <option value="en-GB-SoniaNeural">🇬🇧 Sonia (UK Female)</option>
+        </select>
+        <span class="badge-grounded-call">📚 Grounded AI</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 18px; margin: auto 0; text-align: center; width: 100%; max-width: 680px;">
+        <div class="live-orb listening" id="liveOrb" onclick="handleOrbClick()"></div>
+        <div class="live-call-title" id="liveStateText">Listening... Speak naturally</div>
+        <div class="live-call-sub" id="liveSubtext">Speak anytime. I automatically detect when you stop talking and speak back.</div>
+        <div class="live-transcript-box" id="liveTranscriptBox">
+          <em class="transcript-placeholder">Conversation transcript will appear here in real-time...</em>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 14px;">
+        <button class="btn-career-action" onclick="interruptAssistant()">⏹️ Interrupt</button>
+        <button class="btn-career-action btn-end-call" onclick="endLiveVoiceCall()">🔴 End Call</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Settings Modal -->
+  <div class="modal-backdrop" id="settingsModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">KnowVox Configuration</h3>
+        <button class="modal-close" onclick="closeSettingsModal()">✕</button>
+      </div>
+
+      <!-- Theme Selection in Settings -->
+      <div class="form-group">
+        <label class="form-label">Appearance & Theme</label>
+        <div class="theme-picker-grid">
+          <div class="theme-picker-card" id="cardThemeDark" onclick="setTheme('dark')">
+            <div class="theme-preview-dot" style="background: #0e1117; border: 2px solid #38bdf8;"></div>
+            <div style="font-size: 12px;">Obsidian Glow</div>
+            <div style="font-size: 10px; color: var(--text-muted);">Dark Cyber</div>
+          </div>
+          <div class="theme-picker-card" id="cardThemePearl" onclick="setTheme('pearl')">
+            <div class="theme-preview-dot" style="background: #e2e8f0; border: 2px solid #0284c7;"></div>
+            <div style="font-size: 12px;">Cloud Pearl</div>
+            <div style="font-size: 10px; color: var(--text-muted);">Frosted Glass</div>
+          </div>
+          <div class="theme-picker-card" id="cardThemeNeo" onclick="setTheme('neo')">
+            <div class="theme-preview-dot" style="background: #d8f044; border: 2px solid #1a1a1a;"></div>
+            <div style="font-size: 12px;">Cyber Sand</div>
+            <div style="font-size: 10px; color: var(--text-muted);">Neo-Brutalist</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Voice & Accent Selection</label>
+        <select class="form-select" id="voiceSelect" onchange="changeVoice(this.value)">
+          <option value="en-IN-NeerjaNeural" selected>🇮🇳 Neerja (Indian English, Natural Female)</option>
+          <option value="en-IN-PrabhatNeural">🇮🇳 Prabhat (Indian English, Natural Male)</option>
+          <option value="en-US-JennyNeural">🇺🇸 Jenny (American English, Natural Female)</option>
+          <option value="en-US-GuyNeural">🇺🇸 Guy (American English, Natural Male)</option>
+          <option value="en-GB-SoniaNeural">🇬🇧 Sonia (British English, Natural Female)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Gemini API Key</label>
+        <input type="password" class="form-input" id="apiKeyInput" placeholder="Paste your Gemini API key here">
+        <small style="color: var(--text-muted); font-size: 10.5px;">Keys are stored in your local configuration.</small>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">AI Model</label>
+        <select class="form-select" id="modelSelect">
+          <option value="gemini-3.1-flash-lite" selected>Gemini 3.1 Flash Lite (Ultra Fast & Reliable)</option>
+          <option value="gemini-flash-lite-latest">Gemini Flash Lite Latest (Fast)</option>
+          <option value="gemini-3.6-flash">Gemini 3.6 Flash (Deep Reasoning)</option>
+          <option value="gemini-3.7-flash">Gemini 3.7 Flash</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Voice Recording Duration (Push-to-Talk)</label>
+        <select class="form-select" id="recordDurationSelect">
+          <option value="4">4 Seconds</option>
+          <option value="5" selected>5 Seconds</option>
+          <option value="7">7 Seconds</option>
+          <option value="10">10 Seconds</option>
+        </select>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeSettingsModal()">Cancel</button>
+        <button class="btn-primary" onclick="saveSettings()">Save Configuration</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div class="modal-backdrop" id="profileModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Edit Career OS Profile</h3>
+        <button class="modal-close" onclick="closeProfileModal()">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" class="form-input" id="editName" placeholder="e.g. Ishant">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Education / Degree</label>
+        <input type="text" class="form-input" id="editEducation" placeholder="e.g. B.Tech Computer Science">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Skills (comma separated)</label>
+        <input type="text" class="form-input" id="editSkills" placeholder="e.g. Python, Coding, Machine Learning">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Career Goal</label>
+        <input type="text" class="form-input" id="editGoal" placeholder="e.g. Software Engineer at Top Tech Company">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Experience & Interests</label>
+        <input type="text" class="form-input" id="editExp" placeholder="e.g. Projects, Internships, Gaming">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeProfileModal()">Cancel</button>
+        <button class="btn-primary" onclick="saveCareerProfileData()">Save Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentConversationId = null;
+    let conversationHistory = [];
+    let isRecording = false;
+    let currentAudio = null;
+    let autoSpeak = localStorage.getItem('voice_rag_auto_speak') !== 'false';
+    let currentTheme = localStorage.getItem('knowvox_theme') || 'dark';
+    let isLiveCallActive = false;
+    let cachedApi = null;
+
+    // ==========================================
+    // THEME SWITCHER LOGIC
+    // ==========================================
+    function setTheme(themeName) {
+      currentTheme = themeName;
+      localStorage.setItem('knowvox_theme', themeName);
+
+      document.body.className = `theme-${themeName}`;
+
+      // Update Top Nav Theme Buttons
+      ['dark', 'pearl', 'neo'].forEach(t => {
+        const btn = document.getElementById(`btnTheme${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        if (btn) {
+          if (t === themeName) btn.classList.add('active');
+          else btn.classList.remove('active');
+        }
+
+        const card = document.getElementById(`cardTheme${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        if (card) {
+          if (t === themeName) card.classList.add('active');
+          else card.classList.remove('active');
+        }
+      });
+
+      // Update Hero Titles based on theme personality
+      const heroTitle = document.getElementById('heroDynamicTitle');
+      const heroSub = document.getElementById('heroDynamicSub');
+      if (heroTitle && heroSub) {
+        if (themeName === 'neo') {
+          heroTitle.innerText = "How can I help you today?";
+          heroSub.innerText = "Ask questions by speaking or typing. I retrieve accurate facts directly from your documents and speak natural, refined answers.";
+        } else if (themeName === 'pearl') {
+          heroTitle.innerText = "Voice Knowledge Retrieval";
+          heroSub.innerText = "Speak or ask anything about your documents. I ground every response in your uploaded knowledge base and synthesize natural spoken answers.";
+        } else {
+          heroTitle.innerText = "Voice Knowledge Retrieval";
+          heroSub.innerText = "Speak or ask anything about your documents. I ground every response in your uploaded knowledge base and synthesize natural spoken answers.";
+        }
+      }
+    }
+
+    function initAutoSpeak() {
+      const toggle = document.getElementById('autoSpeakToggle');
+      const icon = document.getElementById('autoSpeakIcon');
+      if (toggle) toggle.checked = autoSpeak;
+      if (icon) icon.innerText = autoSpeak ? '🔊' : '🔇';
+    }
+
+    function toggleAutoSpeak(enabled) {
+      autoSpeak = Boolean(enabled);
+      localStorage.setItem('voice_rag_auto_speak', autoSpeak ? 'true' : 'false');
+      initAutoSpeak();
+      if (!autoSpeak) stopCurrentAudio();
+    }
+
+    function stopCurrentAudio() {
+      if (currentAudio) {
+        if (currentAudio._resolve) {
+          try { currentAudio._resolve(); } catch (e) {}
+          currentAudio._resolve = null;
+        }
+        try { currentAudio.pause(); currentAudio.currentTime = 0; } catch (e) {}
+        currentAudio = null;
+      }
+      if (window.speechSynthesis) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
+      document.querySelectorAll('.audio-play-btn').forEach(b => {
+        b.classList.remove('playing');
+        b.innerHTML = '🔊 Play Voice';
+      });
+    }
+
+    function switchView(viewName) {
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.sidebar-tab-pill').forEach(p => p.classList.remove('active'));
+
+      if (viewName === 'chat') {
+        document.getElementById('tabChat').classList.add('active');
+        document.getElementById('viewChat').classList.add('active');
+        const pill = document.getElementById('pillSessions');
+        if (pill) pill.classList.add('active');
+      } else if (viewName === 'career') {
+        document.getElementById('tabCareer').classList.add('active');
+        document.getElementById('viewCareer').classList.add('active');
+        loadCareerProfile();
+      } else if (viewName === 'vault') {
+        document.getElementById('tabVault').classList.add('active');
+        document.getElementById('viewVault').classList.add('active');
+        const pill = document.getElementById('pillVault');
+        if (pill) pill.classList.add('active');
+        loadVaultDocuments();
+      }
+    }
+
+    // Safe Markdown Renderer
+    function renderMarkdown(text) {
+      if (!text) return "";
+      let html = escapeHtml(text);
+      html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+      html = html.replace(/^\s*[-*•]\s+(.+)$/gm, '<li>$1</li>');
+      html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+      html = html.split('\n\n').map(p => {
+        if (p.startsWith('<ul>') || p.startsWith('<li>')) return p;
+        return '<p>' + p.replace(/\n/g, '<br>') + '</p>';
+      }).join('');
+      return html;
+    }
+
+    // Universal API Bridge
+    function createRestApiAdapter() {
+      const baseUrl = window.location.origin;
+      return {
+        async list_conversations() { const r = await fetch(`${baseUrl}/api/conversations`); return await r.json(); },
+        async create_conversation(title = "New Chat") {
+          const r = await fetch(`${baseUrl}/api/conversations`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title }) });
+          return await r.json();
+        },
+        async get_conversation_history(convId) { const r = await fetch(`${baseUrl}/api/conversations/${encodeURIComponent(convId)}`); return await r.json(); },
+        async delete_conversation(convId) { const r = await fetch(`${baseUrl}/api/conversations/${encodeURIComponent(convId)}`, { method: 'DELETE' }); return await r.json(); },
+        async query_text(query, convId, history, voice) {
+          const r = await fetch(`${baseUrl}/api/query-text`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query, conversation_id: convId || "default", conversation_history: history || [], voice: voice || "en-US-JennyNeural" }) });
+          return await r.json();
+        },
+        async record_and_answer(duration = 5, convId, history, voice) { return { status: "error", answer: "Direct microphone capture is native in Desktop mode.", sources: [] }; },
+        async live_voice_turn(convId, history, voice) { return { status: "silence" }; },
+        async upload_document(filename, base64Data, convId) {
+          const r = await fetch(`${baseUrl}/api/documents/upload`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename, base64_data: base64Data, conversation_id: convId || "default" }) });
+          return await r.json();
+        },
+        async delete_document(filename, convId) { const r = await fetch(`${baseUrl}/api/documents/${encodeURIComponent(filename)}?conversation_id=${encodeURIComponent(convId || "default")}`, { method: 'DELETE' }); return await r.json(); },
+        async clear_all_documents(convId) { const r = await fetch(`${baseUrl}/api/documents?conversation_id=${encodeURIComponent(convId || "default")}`, { method: 'DELETE' }); return await r.json(); },
+        async get_documents(convId) { const r = await fetch(`${baseUrl}/api/documents?conversation_id=${encodeURIComponent(convId || "default")}`); return await r.json(); },
+        async open_document_page(filename, page = 1, convId) {
+          const r = await fetch(`${baseUrl}/api/documents/open`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename, page, conversation_id: convId || "default" }) });
+          return await r.json();
+        },
+        async get_settings() { const r = await fetch(`${baseUrl}/api/settings`); return await r.json(); },
+        async save_settings(apiKey, model) {
+          const r = await fetch(`${baseUrl}/api/settings`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ api_key: apiKey, model }) });
+          return await r.json();
+        },
+        async get_career_profile() { const r = await fetch(`${baseUrl}/api/career-profile`); return await r.json(); },
+        async save_career_profile(name, education, skills, interests, career_goal, experience, location) {
+          const r = await fetch(`${baseUrl}/api/career-profile`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, education, skills, interests, career_goal, experience, location }) });
+          return await r.json();
+        },
+        async synthesize_speech(text, voice) {
+          const r = await fetch(`${baseUrl}/api/synthesize`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text, voice: voice || 'en-US-JennyNeural' })
+          });
+          return await r.json();
+        }
+      };
+    }
+
+    async function getApi() {
+      // 1. Return cached native PyWebView API immediately if available
+      if (cachedApi && !cachedApi._isFallback) return cachedApi;
+      if (window.pywebview && window.pywebview.api) {
+        cachedApi = window.pywebview.api;
+        return cachedApi;
+      }
+
+      // 2. If running via file:/// (Native Desktop App), MUST wait for pywebview to inject
+      const isDesktopApp = window.location.protocol === 'file:';
+      const maxWaitCycles = isDesktopApp ? 80 : 15;
+
+      const pyApi = await new Promise((resolve) => {
+        if (window.pywebview && window.pywebview.api) {
+          return resolve(window.pywebview.api);
+        }
+        let count = 0;
+        const iv = setInterval(() => {
+          count++;
+          if (window.pywebview && window.pywebview.api) {
+            clearInterval(iv);
+            resolve(window.pywebview.api);
+          } else if (count > maxWaitCycles) {
+            clearInterval(iv);
+            resolve(null);
+          }
+        }, 50);
+      });
+
+      if (pyApi) {
+        cachedApi = pyApi;
+        return cachedApi;
+      }
+
+      // 3. In web browser mode or if pywebview failed to load
+      if (!cachedApi || !cachedApi._isFallback) {
+        cachedApi = createRestApiAdapter();
+        cachedApi._isFallback = true;
+      }
+      return cachedApi;
+    }
+
+    function sendQuickPrompt(text) {
+      document.getElementById('chatInput').value = text;
+      submitTextQuery();
+    }
+
+    function handleKeyPress(e) {
+      if (e.key === 'Enter') submitTextQuery();
+    }
+
+    // Conversations
+    async function loadConversationsList() {
+      try {
+        const api = await getApi();
+        if (!api) return;
+        const convs = await api.list_conversations();
+        const el = document.getElementById('convList');
+        const countEl = document.getElementById('sessionCount');
+        if (countEl) countEl.innerText = convs ? convs.length : 0;
+        if (!el) return;
+
+        if (!convs || convs.length === 0) {
+          el.innerHTML = '<div style="font-size: 11.5px; color: var(--text-muted); padding: 8px 4px; line-height: 1.5;">No voice sessions yet. Speak or type below!</div>';
+          return;
+        }
+
+        el.innerHTML = convs.map(c => `
+          <div class="conv-item ${c.id === currentConversationId ? 'active' : ''}" onclick="switchConversation('${c.id}')">
+            <div class="conv-item-left">
+              <span>💬</span>
+              <span class="conv-title" title="${escapeHtml(c.title)}">${escapeHtml(c.title)}</span>
+            </div>
+            <button class="conv-del-btn" title="Delete" onclick="deleteConversation('${c.id}', event)">✕</button>
+          </div>
+        `).join('');
+
+        if (!currentConversationId && convs.length > 0) {
+          switchConversation(convs[0].id);
+        }
+      } catch (err) {
+        console.log('Error loading conversations:', err);
+      }
+    }
+
+    async function clearAllHistory() {
+      if (!confirm('Are you sure you want to clear all voice history?')) return;
+      try {
+        const api = await getApi();
+        if (!api) return;
+        const convs = await api.list_conversations();
+        for (let c of (convs || [])) {
+          await api.delete_conversation(c.id);
+        }
+        currentConversationId = null;
+        await startNewChat();
+        await loadConversationsList();
+      } catch (e) {}
+    }
+
+    async function startNewChat() {
+      stopCurrentAudio();
+      try {
+        const api = await getApi();
+        if (!api) return;
+        const newConv = await api.create_conversation("New Chat");
+        if (newConv && newConv.id) {
+          await switchConversation(newConv.id);
+          await loadConversationsList();
+        }
+      } catch (e) {}
+    }
+
+    async function switchConversation(convId) {
+      if (!convId) return;
+      stopCurrentAudio();
+      currentConversationId = convId;
+      document.querySelectorAll('.conv-item').forEach(el => el.classList.remove('active'));
+      const activeEl = document.querySelector(`.conv-item[onclick*="${convId}"]`);
+      if (activeEl) activeEl.classList.add('active');
+
+      try {
+        const api = await getApi();
+        if (!api) return;
+        const data = await api.get_conversation_history(convId);
+        const feed = document.getElementById('chatFeed');
+        feed.innerHTML = '';
+        conversationHistory = [];
+
+        if (!data || !data.messages || data.messages.length === 0) {
+          const title = currentTheme === 'neo' ? "How can I help you today?" : "Voice Knowledge Retrieval";
+          const sub = currentTheme === 'neo' ? "Ask questions by speaking or typing. I retrieve accurate facts directly from your documents and speak natural, refined answers." : "Speak or ask anything about your documents. I ground every response in your uploaded knowledge base and synthesize natural spoken answers.";
+          feed.innerHTML = `
+            <div class="empty-hero" id="emptyHero">
+              <div class="hero-sparkle">✨</div>
+              <h1 class="hero-title" id="heroDynamicTitle">${title}</h1>
+              <p class="hero-sub" id="heroDynamicSub">${sub}</p>
+              <div class="prompt-pills">
+                <div class="pill" onclick="sendQuickPrompt('What is the summary of this document?')">"What is the summary of this document?"</div>
+                <div class="pill" onclick="sendQuickPrompt('What are the key technical skills mentioned?')">"What are the key technical skills mentioned?"</div>
+                <div class="pill" onclick="sendQuickPrompt('What is the education background?')">"What is the education background?"</div>
+                <div class="pill" onclick="sendQuickPrompt('Extract actionable steps or recommendations')">"Extract actionable steps or recommendations"</div>
+              </div>
+            </div>
+          `;
+        } else {
+          hideHero();
+          data.messages.forEach(msg => {
+            if (msg.role === 'user') {
+              appendUserMessage(msg.content);
+              conversationHistory.push({ role: 'user', content: msg.content });
+            } else {
+              appendAssistantMessage(msg.content, msg.sources || [], msg.audio_base64 || null);
+              conversationHistory.push({ role: 'assistant', content: msg.content });
+            }
+          });
+        }
+        renderDocumentList(data.documents || []);
+      } catch (e) {}
+    }
+
+    async function deleteConversation(convId, e) {
+      if (e) e.stopPropagation();
+      stopCurrentAudio();
+      try {
+        const api = await getApi();
+        if (!api) return;
+        await api.delete_conversation(convId);
+        if (currentConversationId === convId) currentConversationId = null;
+        await loadConversationsList();
+      } catch (e) {}
+    }
+
+    // Query
+    async function submitTextQuery() {
+      stopCurrentAudio();
+      const input = document.getElementById('chatInput');
+      const query = input.value.trim();
+      if (!query) return;
+
+      input.value = '';
+      hideHero();
+      appendUserMessage(query);
+
+      const loadingId = appendAssistantLoading();
+
+      try {
+        const api = await getApi();
+        if (!api) {
+          removeLoading(loadingId);
+          appendAssistantMessage("Backend connection not ready yet. Please wait a moment.", [], null);
+          return;
+        }
+
+        const voice = getActiveVoice();
+        const res = await api.query_text(query, currentConversationId, conversationHistory, voice);
+        removeLoading(loadingId);
+        appendAssistantMessage(res.answer, res.sources, res.audio_base64);
+
+        conversationHistory.push({ role: 'user', content: query });
+        conversationHistory.push({ role: 'assistant', content: res.answer });
+
+        if (res.audio_base64 && autoSpeak) {
+          playAudioFromBase64(res.audio_base64);
+        }
+        loadConversationsList();
+      } catch (err) {
+        removeLoading(loadingId);
+        appendAssistantMessage("Error: " + err, [], null);
+      }
+    }
+
+    async function startVoiceRecording() {
+      stopCurrentAudio();
+      if (isRecording) return;
+      isRecording = true;
+
+      const overlay = document.getElementById('pttOverlay');
+      overlay.classList.add('active');
+      const durationSec = parseInt(document.getElementById('recordDurationSelect')?.value || '5', 10);
+      let countdown = durationSec;
+      const timerEl = document.getElementById('pttTimer');
+      timerEl.innerText = `Speak now (${countdown}s)...`;
+
+      const iv = setInterval(() => {
+        countdown--;
+        if (countdown > 0) {
+          timerEl.innerText = `Speak now (${countdown}s)...`;
+        } else {
+          clearInterval(iv);
+          timerEl.innerText = `Processing speech & finding answer...`;
+        }
+      }, 1000);
+
+      try {
+        const api = await getApi();
+        const voice = getActiveVoice();
+        const res = await api.record_and_answer(durationSec, currentConversationId, conversationHistory, voice);
+        overlay.classList.remove('active');
+        isRecording = false;
+
+        if (res && res.transcription) {
+          hideHero();
+          appendUserMessage(res.transcription);
+          appendAssistantMessage(res.answer, res.sources, res.audio_base64);
+          conversationHistory.push({ role: 'user', content: res.transcription });
+          conversationHistory.push({ role: 'assistant', content: res.answer });
+          if (res.audio_base64 && autoSpeak) playAudioFromBase64(res.audio_base64);
+          loadConversationsList();
+        } else if (res && res.answer) {
+          hideHero();
+          appendAssistantMessage(res.answer, [], null);
+        }
+      } catch (e) {
+        overlay.classList.remove('active');
+        isRecording = false;
+      }
+    }
+
+    // Live Voice Call
+    async function startLiveVoiceCall() {
+      stopCurrentAudio();
+      isLiveCallActive = true;
+      document.getElementById('liveCallModal').classList.add('active');
+      runLiveVoiceLoop();
+    }
+
+    function endLiveVoiceCall() {
+      isLiveCallActive = false;
+      stopCurrentAudio();
+      document.getElementById('liveCallModal').classList.remove('active');
+    }
+
+    function interruptAssistant() {
+      stopCurrentAudio();
+      setLiveOrbState('listening', 'Listening... Speak now', 'Assistant interrupted. Speak your question.');
+    }
+
+    function handleOrbClick() {
+      if (currentAudio) interruptAssistant();
+    }
+
+    function setLiveOrbState(state, title, subtitle) {
+      const orb = document.getElementById('liveOrb');
+      const st = document.getElementById('liveStateText');
+      const sb = document.getElementById('liveSubtext');
+      orb.className = 'live-orb ' + state;
+      if (title) st.innerText = title;
+      if (subtitle) sb.innerText = subtitle;
+    }
+
+    async function runLiveVoiceLoop() {
+      while (isLiveCallActive) {
+        try {
+          const api = await getApi();
+          if (!api) { await new Promise(r => setTimeout(r, 400)); continue; }
+
+          setLiveOrbState('listening', 'Listening... Speak naturally', 'I automatically detect when you stop talking and speak back.');
+          
+          let recRes;
+          const voice = getActiveVoice();
+          if (typeof api.record_live_speech === 'function') {
+            recRes = await api.record_live_speech();
+          } else {
+            recRes = await api.live_voice_turn(currentConversationId, conversationHistory, voice);
+          }
+
+          if (!isLiveCallActive) break;
+
+          if (recRes && recRes.status === 'speech_detected') {
+            setLiveOrbState('thinking', '⚡ Thinking & Generating Answer...', 'Processing speech on-device and formulating answer...');
+
+            const res = await api.process_live_speech(currentConversationId, conversationHistory, voice);
+            if (!isLiveCallActive) break;
+
+            if (res && res.status === 'success' && res.transcription) {
+              const tb = document.getElementById('liveTranscriptBox');
+              tb.innerHTML = `<div><strong>You:</strong> ${escapeHtml(res.transcription)}</div><div style="color: var(--primary); margin-top:6px;"><strong>KnowVox:</strong> ${escapeHtml(res.answer)}</div>`;
+              tb.scrollTop = tb.scrollHeight;
+
+              hideHero();
+              appendUserMessage(res.transcription);
+              appendAssistantMessage(res.answer, res.sources, res.audio_base64);
+              conversationHistory.push({ role: 'user', content: res.transcription });
+              conversationHistory.push({ role: 'assistant', content: res.answer });
+              loadConversationsList();
+
+              if (res.audio_base64) {
+                setLiveOrbState('speaking', 'KnowVox Speaking...', 'Click orb or tap Interrupt to speak anytime.');
+                await playLiveAudio(res.audio_base64);
+              }
+              await new Promise(r => setTimeout(r, 200));
+            } else if (res && res.status === 'unclear') {
+              setLiveOrbState('listening', 'Listening... Please speak again', 'Could not clearly hear speech.');
+              await new Promise(r => setTimeout(r, 600));
+            }
+          } else if (recRes && recRes.status === 'success' && recRes.transcription) {
+            const tb = document.getElementById('liveTranscriptBox');
+            tb.innerHTML = `<div><strong>You:</strong> ${escapeHtml(recRes.transcription)}</div><div style="color: var(--primary); margin-top:6px;"><strong>KnowVox:</strong> ${escapeHtml(recRes.answer)}</div>`;
+            tb.scrollTop = tb.scrollHeight;
+
+            hideHero();
+            appendUserMessage(recRes.transcription);
+            appendAssistantMessage(recRes.answer, recRes.sources, recRes.audio_base64);
+            conversationHistory.push({ role: 'user', content: recRes.transcription });
+            conversationHistory.push({ role: 'assistant', content: recRes.answer });
+            loadConversationsList();
+
+            if (recRes.audio_base64) {
+              setLiveOrbState('speaking', 'KnowVox Speaking...', 'Click orb or tap Interrupt to speak anytime.');
+              await playLiveAudio(recRes.audio_base64);
+            }
+          } else {
+            await new Promise(r => setTimeout(r, 100));
+          }
+        } catch (e) {
+          await new Promise(r => setTimeout(r, 400));
+        }
+      }
+    }
+
+    function playLiveAudio(base64Str) {
+      return new Promise((resolve) => {
+        stopCurrentAudio();
+        const mime = base64Str.startsWith('UklGR') ? 'audio/wav' : 'audio/mp3';
+        currentAudio = new Audio(`data:${mime};base64,` + base64Str);
+        currentAudio._resolve = resolve;
+        currentAudio.onended = () => {
+          if (currentAudio) currentAudio._resolve = null;
+          currentAudio = null;
+          resolve();
+        };
+        currentAudio.onerror = () => {
+          if (currentAudio) currentAudio._resolve = null;
+          currentAudio = null;
+          resolve();
+        };
+        currentAudio.play().catch(() => {
+          if (currentAudio) currentAudio._resolve = null;
+          currentAudio = null;
+          resolve();
+        });
+      });
+    }
+
+    // Documents
+    function triggerFileUpload() { document.getElementById('fileInput').click(); }
+    async function handleFileSelected(event) {
+      const files = event.target.files;
+      if (!files || files.length === 0) return;
+      await processFiles(files);
+      event.target.value = '';
+    }
+
+    async function processFiles(files) {
+      const uploadText = document.getElementById('uploadText');
+      const orig = uploadText ? uploadText.innerText : 'Upload / Drop Files';
+      if (uploadText) uploadText.innerText = `⏳ Indexing ${files.length} file(s)...`;
+
+      try {
+        const api = await getApi();
+        if (!api) {
+          alert('Backend connection not ready yet. Please wait a moment.');
+          if (uploadText) uploadText.innerText = orig;
+          return;
+        }
+
+        let successCount = 0;
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          if (uploadText) uploadText.innerText = `⏳ Indexing ${file.name}...`;
+          try {
+            const b64 = await readFileAsBase64(file);
+            const res = await api.upload_document(file.name, b64, currentConversationId);
+            if (res && res.status === 'success') {
+              successCount++;
+            } else if (res && res.message) {
+              alert('Upload note: ' + res.message);
+            }
+          } catch (err) {
+            alert('Upload error: ' + err);
+          }
+        }
+
+        if (uploadText) uploadText.innerText = orig;
+        await loadConversationDocs();
+        await loadConversationsList();
+        await loadVaultDocuments();
+
+        if (successCount > 0) {
+          alert(`✅ Successfully indexed ${successCount} document(s) into knowledge base!`);
+        }
+      } catch (e) {
+        if (uploadText) uploadText.innerText = orig;
+        alert('Error: ' + e);
+      }
+    }
+
+    function readFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = (e) => resolve(e.target.result.split(',')[1]);
+        r.onerror = (e) => reject(e);
+        r.readAsDataURL(file);
+      });
+    }
+
+    async function loadConversationDocs() {
+      try {
+        const api = await getApi();
+        if (!api) return;
+        const docs = await api.get_documents(currentConversationId);
+        renderDocumentList(docs || []);
+      } catch (e) {}
+    }
+
+    function renderDocumentList(docs) {
+      const el = document.getElementById('docList');
+      if (!el) return;
+      if (docs && docs.length > 0) {
+        el.innerHTML = docs.map(d => {
+          const name = d.original_name || d.name || d.filename || 'Document';
+          const chunks = d.chunks_count ? `${d.chunks_count} Chunks` : (d.chunks || 'Indexed');
+          return `
+            <div class="doc-item">
+              <div class="doc-info"><span>📄</span><span class="doc-name" title="${escapeHtml(name)}">${escapeHtml(name)}</span></div>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span class="doc-badge">${escapeHtml(chunks)}</span>
+                <button class="doc-del-btn" onclick="deleteDoc('${escapeHtml(name)}')">✕</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else {
+        el.innerHTML = '<div style="font-size: 11px; color: var(--text-muted); padding: 6px; text-align: center;">No docs in this chat yet.</div>';
+      }
+    }
+
+    async function deleteDoc(docName) {
+      try {
+        const api = await getApi();
+        if (!api) return;
+        await api.delete_document(docName, currentConversationId);
+        loadConversationDocs();
+        loadConversationsList();
+        loadVaultDocuments();
+      } catch (e) {}
+    }
+
+    async function clearAllDocs() {
+      try {
+        const api = await getApi();
+        if (!api) return;
+        await api.clear_all_documents(currentConversationId);
+        loadConversationDocs();
+        loadConversationsList();
+        loadVaultDocuments();
+      } catch (e) {}
+    }
+
+    // Vault
+    async function loadVaultDocuments() {
+      try {
+        const api = await getApi();
+        if (!api) return;
+        const docs = await api.get_documents(currentConversationId);
+        const grid = document.getElementById('vaultGrid');
+        if (!grid) return;
+        if (!docs || docs.length === 0) {
+          grid.innerHTML = '<div style="color:var(--text-muted); font-size:13px; grid-column: 1/-1; padding: 32px 16px; text-align: center;">No documents uploaded yet. Click <strong>+ Upload Documents</strong> above to add PDFs or notes.</div>';
+          return;
+        }
+        grid.innerHTML = docs.map(d => {
+          const name = d.original_name || d.name || d.filename || 'Document';
+          const chunks = d.chunks_count ? `${d.chunks_count} Chunks` : (d.chunks || 'Indexed');
+          return `
+            <div class="vault-card" style="display:flex; flex-direction:column; justify-content:space-between; min-height:140px;">
+              <div>
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:22px;">📄</span>
+                    <span style="font-size:13.5px; font-weight:700; color:var(--hero-title-color); word-break:break-all;" title="${escapeHtml(name)}">${escapeHtml(name)}</span>
+                  </div>
+                  <button class="doc-del-btn" style="font-size:14px; padding:4px 8px; border-radius:4px;" title="Delete Document" onclick="deleteDoc('${escapeHtml(name)}')">✕</button>
+                </div>
+                <span class="doc-badge">${escapeHtml(chunks)}</span>
+              </div>
+              <div style="display:flex; gap:8px; margin-top:14px;">
+                <button class="btn-career-action" style="flex:1; padding:6px 10px; font-size:11.5px;" onclick="sendQuickPrompt('Summarize key points from ${escapeHtml(name)}')">📑 Summarize</button>
+                <button class="btn-career-action" style="background:rgba(239, 68, 68, 0.12); color:#ef4444; border:1px solid rgba(239, 68, 68, 0.3); padding:6px 12px; font-size:11.5px;" title="Remove this document from knowledge base" onclick="deleteDoc('${escapeHtml(name)}')">🗑️ Remove</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {}
+    }
+
+    // Career OS Profile Hub
+    async function loadCareerProfile() {
+      try {
+        const api = await getApi();
+        if (!api) return;
+        const res = await api.get_career_profile();
+        if (res && res.status === 'success' && res.profile) {
+          const p = res.profile;
+          document.getElementById('careerProfileName').innerText = `${p.name || 'User'}'s Career Profile`;
+          document.getElementById('careerProfileGoal').innerText = `Goal: ${p.career_goal || 'Software Engineer'} | ${p.education || 'B.Tech'}`;
+          document.getElementById('profileEducation').innerText = p.education || 'Not specified';
+          document.getElementById('profileSkills').innerText = p.skills || 'Not specified';
+          document.getElementById('profileGoal').innerText = p.career_goal || 'Not specified';
+          document.getElementById('profileExp').innerText = `${p.experience || 'None'} | Interests: ${p.interests || 'None'}`;
+        }
+      } catch (e) {}
+    }
+
+    function openEditProfileModal() {
+      document.getElementById('profileModal').classList.add('active');
+      getApi().then(api => {
+        if (!api) return;
+        api.get_career_profile().then(res => {
+          if (res && res.profile) {
+            document.getElementById('editName').value = res.profile.name || '';
+            document.getElementById('editEducation').value = res.profile.education || '';
+            document.getElementById('editSkills').value = res.profile.skills || '';
+            document.getElementById('editGoal').value = res.profile.career_goal || '';
+            document.getElementById('editExp').value = res.profile.experience || '';
+          }
+        });
+      });
+    }
+
+    function closeProfileModal() {
+      document.getElementById('profileModal').classList.remove('active');
+    }
+
+    async function saveCareerProfileData() {
+      const name = document.getElementById('editName').value;
+      const education = document.getElementById('editEducation').value;
+      const skills = document.getElementById('editSkills').value;
+      const goal = document.getElementById('editGoal').value;
+      const exp = document.getElementById('editExp').value;
+
+      try {
+        const api = await getApi();
+        if (api) {
+          await api.save_career_profile(name, education, skills, "Technology", goal, exp, "Remote");
+          closeProfileModal();
+          loadCareerProfile();
+          alert('✅ Career Profile updated successfully!');
+        }
+      } catch (e) {
+        alert('Error saving profile: ' + e);
+      }
+    }
+
+    function generateCareerStrategy() {
+      switchView('chat');
+      sendQuickPrompt('Based on my Career OS profile, provide a personalized roadmap, required skills to level up, and action items for my career goal.');
+    }
+
+    function practiceInterview() {
+      switchView('chat');
+      sendQuickPrompt('Act as a Senior Tech Interviewer. Based on my career goal and skills, ask me 1 technical interview question at a time and evaluate my response.');
+    }
+
+    // UI helpers
+    function hideHero() { const h = document.getElementById('emptyHero'); if (h) h.style.display = 'none'; }
+    function appendUserMessage(text) {
+      const feed = document.getElementById('chatFeed');
+      const row = document.createElement('div');
+      row.className = 'msg-row user';
+      row.innerHTML = `<div class="bubble">${escapeHtml(text)}</div><div class="avatar user">U</div>`;
+      feed.appendChild(row);
+      feed.scrollTop = feed.scrollHeight;
+    }
+
+    function parseSourceBadge(sourceStr) {
+      if (!sourceStr) return { filename: '', page: 1 };
+      const match = sourceStr.match(/^(.*?)\s*\((?:Page|page)\s*(\d+)\)$/i);
+      if (match) return { filename: match[1].trim(), page: parseInt(match[2], 10) || 1 };
+      return { filename: sourceStr.trim(), page: 1 };
+    }
+
+    async function openSourceDoc(sourceStr) {
+      const { filename, page } = parseSourceBadge(sourceStr);
+      try {
+        const api = await getApi();
+        if (api) await api.open_document_page(filename, page, currentConversationId);
+      } catch (e) {}
+    }
+
+    function getActiveVoice() {
+      return localStorage.getItem('voice_rag_active_voice') || 'en-IN-NeerjaNeural';
+    }
+
+    async function changeVoice(voiceName) {
+      if (!voiceName) return;
+      localStorage.setItem('voice_rag_active_voice', voiceName);
+      initVoice();
+
+      const sampleNames = {
+        'en-IN-NeerjaNeural': 'Neerja (Indian English)',
+        'en-IN-PrabhatNeural': 'Prabhat (Indian English)',
+        'en-US-JennyNeural': 'Jenny (American English)',
+        'en-US-GuyNeural': 'Guy (American English)',
+        'en-GB-SoniaNeural': 'Sonia (British English)'
+      };
+      const previewName = sampleNames[voiceName] || 'Voice updated';
+
+      try {
+        const api = await getApi();
+        if (api && typeof api.synthesize_speech === 'function') {
+          const res = await api.synthesize_speech(`Voice accent set to ${previewName}.`, voiceName);
+          if (res && res.audio_base64) {
+            playAudioFromBase64(res.audio_base64);
+          }
+        }
+      } catch (e) {
+        console.log('Voice preview notice:', e);
+      }
+    }
+
+    function initVoice() {
+      const activeVoice = getActiveVoice();
+      ['topVoiceSelect', 'liveCallVoiceSelect', 'voiceSelect'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = activeVoice;
+      });
+    }
+
+    function appendAssistantMessage(text, sources, audioBase64) {
+      const feed = document.getElementById('chatFeed');
+      const row = document.createElement('div');
+      row.className = 'msg-row assistant';
+
+      let sourcesHtml = '';
+      if (sources && sources.length > 0) {
+        const docMap = {};
+        sources.forEach(s => {
+          const m = s.match(/^(.*?)(?:\.pdf|\.txt|\.docx)?\s*[\(\[]?(?:page|p\.?)\s*(\d+)[\)\]]?$/i);
+          let rawName = s;
+          let pageNum = null;
+          if (m) {
+            rawName = m[1].replace(/[\+\-_]/g, ' ').replace(/\s+/g, ' ').trim();
+            pageNum = m[2];
+          } else {
+            rawName = s.replace(/[\+\-_]/g, ' ').replace(/\s+/g, ' ').trim();
+          }
+          if (!docMap[rawName]) docMap[rawName] = [];
+          if (pageNum && !docMap[rawName].includes(pageNum)) {
+            docMap[rawName].push(pageNum);
+          }
+        });
+
+        const groups = [];
+        for (const [docName, pages] of Object.entries(docMap)) {
+          const shortName = docName.length > 24 ? docName.substring(0, 21) + '...' : docName;
+          if (pages.length > 0) {
+            pages.sort((a, b) => parseInt(a) - parseInt(b));
+            const pagePills = pages.map(p => 
+              `<span class="source-chip" style="padding: 2px 7px; font-size: 11px; margin-right: 3px; cursor: pointer;" onclick="openSourceDoc('${escapeHtml(docName)}.pdf (Page ${p})')">P.${p} ↗</span>`
+            ).join('');
+            groups.push(`<div style="display:inline-flex; align-items:center; flex-wrap:wrap; gap:3px; margin-right:6px; margin-bottom:4px; background:rgba(255,255,255,0.04); padding:2px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);"><span style="font-size:11px; font-weight:600; color:var(--text-muted); margin-right:4px;">📄 ${escapeHtml(shortName)}:</span>${pagePills}</div>`);
+          } else {
+            groups.push(`<span class="source-chip" style="padding: 2px 8px; font-size: 11px; margin-right: 4px; cursor: pointer;" onclick="openSourceDoc('${escapeHtml(docName)}')">📄 ${escapeHtml(shortName)} ↗</span>`);
+          }
+        }
+        sourcesHtml = `<div class="sources-box" style="display:flex; flex-wrap:wrap; gap:4px; margin-top:8px;">${groups.join('')}</div>`;
+      }
+
+      const encodedText = encodeURIComponent(text || '');
+      const audioBtn = `<button class="audio-play-btn" data-text="${encodedText}" onclick="handleMessageVoicePlay(this, '${audioBase64 || ''}')">🔊 Play Voice</button>`;
+
+      row.innerHTML = `
+        <div class="avatar assistant">
+          <img src="logo.jpeg" alt="KnowVox" class="brand-logo-img">
+        </div>
+        <div class="bubble">
+          <div>${renderMarkdown(text)}</div>
+          ${sourcesHtml}
+          <div class="msg-toolbar">${audioBtn}</div>
+        </div>
+      `;
+      feed.appendChild(row);
+      feed.scrollTop = feed.scrollHeight;
+    }
+
+    async function handleMessageVoicePlay(btn, cachedBase64) {
+      if (currentAudio) {
+        stopCurrentAudio();
+        if (currentAudio._btn === btn) return;
+      }
+
+      const currentVoice = getActiveVoice();
+      const rawEncoded = btn.getAttribute('data-text') || '';
+      const textToSpeak = decodeURIComponent(rawEncoded);
+
+      btn.classList.add('playing');
+      btn.innerHTML = '⏳ Loading Voice...';
+
+      try {
+        const api = await getApi();
+        if (api && typeof api.synthesize_speech === 'function' && textToSpeak) {
+          const res = await api.synthesize_speech(textToSpeak, currentVoice);
+          if (res && res.audio_base64) {
+            playAudioFromBase64(res.audio_base64, btn);
+            return;
+          }
+        }
+      } catch (e) {
+        console.log('Dynamic synthesis fallback:', e);
+      }
+
+      if (cachedBase64) {
+        playAudioFromBase64(cachedBase64, btn);
+      } else {
+        btn.classList.remove('playing');
+        btn.innerHTML = '🔊 Play Voice';
+      }
+    }
+
+    function appendAssistantLoading() {
+      const feed = document.getElementById('chatFeed');
+      const id = 'loading_' + Date.now();
+      const row = document.createElement('div');
+      row.className = 'msg-row assistant';
+      row.id = id;
+      row.innerHTML = `
+        <div class="avatar assistant">
+          <img src="logo.jpeg" alt="KnowVox" class="brand-logo-img">
+        </div>
+        <div class="bubble">
+          <div class="thinking-bubble">
+            <div class="thinking-spinner"></div>
+            <span>Thinking & synthesizing answer...</span>
+          </div>
+        </div>
+      `;
+      feed.appendChild(row);
+      feed.scrollTop = feed.scrollHeight;
+      return id;
+    }
+
+    function removeLoading(id) { const el = document.getElementById(id); if (el) el.remove(); }
+
+    function toggleAudioPlayback(btn, base64Str) {
+      if (currentAudio) {
+        currentAudio.pause();
+        document.querySelectorAll('.audio-play-btn').forEach(b => {
+          b.classList.remove('playing');
+          b.innerHTML = '🔊 Play Voice';
+        });
+        if (currentAudio._btn === btn) { currentAudio = null; return; }
+      }
+      playAudioFromBase64(base64Str, btn);
+    }
+
+    function playAudioFromBase64(base64Str, btnEl) {
+      if (currentAudio) currentAudio.pause();
+      const mime = base64Str.startsWith('UklGR') ? 'audio/wav' : 'audio/mp3';
+      currentAudio = new Audio(`data:${mime};base64,` + base64Str);
+      currentAudio._btn = btnEl;
+
+      if (btnEl) { btnEl.classList.add('playing'); btnEl.innerHTML = '⏹️ Stop Voice'; }
+      currentAudio.onended = () => {
+        if (btnEl) { btnEl.classList.remove('playing'); btnEl.innerHTML = '🔊 Play Voice'; }
+        currentAudio = null;
+      };
+      currentAudio.play().catch(e => {});
+    }
+
+    function openSettingsModal() { document.getElementById('settingsModal').classList.add('active'); }
+    function closeSettingsModal() { document.getElementById('settingsModal').classList.remove('active'); }
+
+    async function saveSettings() {
+      const apiKey = document.getElementById('apiKeyInput').value;
+      const model = document.getElementById('modelSelect').value;
+      try {
+        const api = await getApi();
+        if (api) {
+          await api.save_settings(apiKey, model);
+          closeSettingsModal();
+          alert('✅ Settings saved!');
+        }
+      } catch (e) { alert('Error: ' + e); }
+    }
+
+    function escapeHtml(text) {
+      if (!text) return "";
+      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+      return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      setTheme(currentTheme);
+      initAutoSpeak();
+      initVoice();
+      loadConversationsList();
+      loadCareerProfile();
+    });
+
+    window.addEventListener('pywebviewready', () => {
+      if (window.pywebview && window.pywebview.api) {
+        cachedApi = window.pywebview.api;
+      }
+      setTheme(currentTheme);
+      initAutoSpeak();
+      initVoice();
+      loadConversationsList();
+      loadCareerProfile();
+    });
+  </script>
+</body>
+</html>
