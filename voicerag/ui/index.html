@@ -1898,10 +1898,10 @@
         </div>
 
         <div class="upload-box" id="uploadBox" onclick="triggerFileUpload()">
-          <div class="upload-box-icon">📄</div>
-          <div class="upload-box-title" id="uploadText">Upload / Drop Files</div>
-          <div class="upload-box-sub" id="uploadSub">PDF, TXT, MD, CSV, JSON</div>
-          <input type="file" id="fileInput" accept=".pdf,.txt,.md,.csv,.json" multiple style="display:none;" onchange="handleFileSelected(event)">
+          <div class="upload-box-icon">📁</div>
+          <div class="upload-box-title" id="uploadText">Upload Documents & Photos</div>
+          <div class="upload-box-sub" id="uploadSub">PDF, Photos (PNG/JPG), TXT, MD</div>
+          <input type="file" id="fileInput" accept=".pdf,.txt,.md,.csv,.json,.png,.jpg,.jpeg,.webp,.bmp" multiple style="display:none;" onchange="handleFileSelected(event)">
         </div>
 
         <div class="doc-list" id="docList">
@@ -1991,7 +1991,8 @@
 
       <div class="input-wrapper">
         <button class="btn-attach" title="Attach Document" onclick="triggerFileUpload()">+</button>
-        <input type="text" class="chat-input" id="chatInput" placeholder="Ask anything about your documents or speak..." onkeydown="handleKeyPress(event)">
+        <button class="btn-attach" title="Upload Photo / Notes" onclick="triggerFileUpload()" style="font-size: 15px;">📷</button>
+        <input type="text" class="chat-input" id="chatInput" placeholder="Ask anything, quiz me, upload photos, or speak..." onkeydown="handleKeyPress(event)">
         <button class="btn-career-action" style="padding: 6px 14px; border-radius: 20px; font-size: 12px;" onclick="startLiveVoiceCall()">
           🎙️ Live Call Mode
         </button>
@@ -2839,9 +2840,11 @@
         el.innerHTML = docs.map(d => {
           const name = d.original_name || d.name || d.filename || 'Document';
           const chunks = d.chunks_count ? `${d.chunks_count} Chunks` : (d.chunks || 'Indexed');
+          const isImg = /\.(png|jpe?g|webp|bmp)$/i.test(name);
+          const icon = isImg ? '🖼️' : '📄';
           return `
             <div class="doc-item">
-              <div class="doc-info"><span>📄</span><span class="doc-name" title="${escapeHtml(name)}">${escapeHtml(name)}</span></div>
+              <div class="doc-info"><span>${icon}</span><span class="doc-name" title="${escapeHtml(name)}">${escapeHtml(name)}</span></div>
               <div style="display:flex; align-items:center; gap:6px;">
                 <span class="doc-badge">${escapeHtml(chunks)}</span>
                 <button class="doc-del-btn" onclick="deleteDoc('${escapeHtml(name)}')">✕</button>

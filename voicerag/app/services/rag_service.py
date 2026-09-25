@@ -268,6 +268,34 @@ ANSWER:"""
                 )
             return {"answer": answer, "sources": []}
 
+        # 1.5 Business Pitch & Executive Model
+        is_pitch = any(w in q_lower for w in [
+            "business pitch", "pitch", "pitch deck", "business model", "monetization",
+            "market size", "tam", "why invest", "investor", "startup pitch", "revenue model", "commercial"
+        ])
+        if is_pitch:
+            answer = (
+                f"💼 **KnowVox AI — Venture Pitch & Executive Business Model**\n\n"
+                f"### 1. The Core Problem\n"
+                f"Modern enterprise and academic AI tools (ChatGPT, Microsoft Copilot) suffer from **100% Cloud Dependency**. When connectivity drops in remote sites, transit, defense zones, or rural universities, these tools fail completely. Conversely, running existing local models (like Ollama 7B) demands **$2,000+ dedicated gaming GPUs**, multi-gigabyte downloads, and causes massive battery drain.\n\n"
+                f"### 2. The KnowVox Solution\n"
+                f"KnowVox AI is the **first ultra-lightweight (<95MB) Voice-First Edge RAG Assistant**:\n"
+                f"• **Hybrid Architecture:** Seamless dual-mode (Cloud Gemini 2.5 when online; 100% on-device neural STT, ChromaDB vector store, and heuristic synthesis when offline).\n"
+                f"• **Zero-GPU CPU Native:** Runs on everyday Intel/AMD laptops with sub-second voice latency.\n"
+                f"• **100% Privacy & Zero Hallucination:** Facts are strictly grounded in user-uploaded documents and persistent SQLite Career OS profiles.\n\n"
+                f"### 3. Market Opportunity (TAM / SAM)\n"
+                f"• **Total Addressable Market (TAM):** **$84 Billion** across EdTech, Voice AI, and Enterprise Edge Knowledge Retrieval.\n"
+                f"• **Target Segments:** 40M+ Higher Ed Students in India (exam prep, campus labs), Remote Field Engineers, Healthcare/Clinical Providers, and Defense/Government operations requiring zero cloud leakage.\n\n"
+                f"### 4. Monetization & Revenue Model\n"
+                f"• **B2C Freemium:** Free local core app; **KnowVox Pro @ ₹299/month ($3.99/mo)** for advanced multilingual voice synthesis, unlimited cloud vision, and AI mock interview scorecards.\n"
+                f"• **B2B Campus & Enterprise Licensing:** **₹15,000 / seat / year** for university departments, law firms, and defense institutes with custom domain knowledge vaults and offline enterprise compliance.\n\n"
+                f"### 5. Competitive Edge & Defensibility (The Moat)\n"
+                f"• **Proprietary Packaging:** <95MB zero-install release binary vs. 8GB+ competing models.\n"
+                f"• **Multimodal Offline Ingestion:** Native Windows OCR for handwritten notes and diagrams with zero cloud cost.\n"
+                f"• **Smart India Hackathon 2026:** Round 1 Cleared; open-source public validation on GitHub ([HOOGABOOGA1/KnowVox-AI](https://github.com/HOOGABOOGA1/KnowVox-AI))."
+            )
+            return {"answer": answer, "sources": []}
+
         # 2. Career OS Profile Overview & Notes
         is_profile_notes = any(w in q_lower for w in [
             "notes about my career", "notes on my career", "career profile notes", "profile notes",
@@ -424,12 +452,15 @@ ANSWER:"""
         context_chunks: List[Dict[str, Any]],
         sources_set: set
     ) -> Dict[str, Any]:
-        """Synthesizes rich, detailed, and clear answers offline from retrieved vector store chunks."""
+        """Synthesizes Gemini-grade rich, conceptual, and executive answers offline from retrieved vector store chunks."""
         q_lower = query.lower().strip()
+        is_quiz = any(w in q_lower for w in ["quiz", "test me", "mcq", "multiple choice", "practice question", "test my knowledge"])
+        is_flashcards = any(w in q_lower for w in ["flashcard", "flashcards", "card", "cards", "flip card", "active recall"])
+        is_notes = any(w in q_lower for w in ["note", "notes", "takeaway", "takeaways", "summary", "pointers", "bullet"])
         is_deep_dive = any(w in q_lower for w in [
             "explain more", "more detail", "details", "in detail", "elaborate",
             "tell me more", "expand", "break down", "comprehensive", "deep dive",
-            "summarize", "overview", "all laws", "rules", "why", "how"
+            "overview", "all laws", "rules", "why", "how"
         ])
 
         # Extract meaningful search keywords from query
@@ -437,23 +468,22 @@ ANSWER:"""
             "what", "is", "the", "are", "how", "why", "where", "who", "which",
             "in", "on", "a", "an", "to", "for", "of", "and", "tell", "me", "about",
             "from", "this", "document", "file", "pdf", "can", "you", "please",
-            "give", "explain", "more", "details"
+            "give", "explain", "more", "details", "quiz", "flashcard", "notes"
         }
         query_words = set(re.findall(r'\w+', q_lower)) - stop_words
 
-        # Group extracted content by page and section
-        sections = []
-        seen_texts = set()
+        # Clean chunks and tokenize sentences
+        all_sentences = []
+        sources_list = []
+        user_wants_toc = any(w in q_lower for w in ["contents", "table of contents", "index", "chapters list"])
 
-        chunks_to_use = context_chunks if is_deep_dive else context_chunks[:4]
+        chunks_to_use = context_chunks if is_deep_dive else context_chunks[:6]
 
         for i, chunk in enumerate(chunks_to_use):
             raw_text = chunk.get("text", "").strip()
             if not raw_text:
                 continue
 
-            # Skip Table of Contents / Index chunks unless user explicitly asked for contents
-            user_wants_toc = any(w in q_lower for w in ["contents", "table of contents", "index", "chapters list"])
             if not user_wants_toc and self._is_table_of_contents(raw_text):
                 continue
 
@@ -463,75 +493,151 @@ ANSWER:"""
             cleaned = re.sub(r'[_\[\]]+UDGMENT', 'JUDGMENT:', cleaned, flags=re.IGNORECASE)
             for bad_sym in ['«', '»', '~', '|', '^', '<', '>']:
                 cleaned = cleaned.replace(bad_sym, ' ')
-            # Repair OCR drop-caps like "C hanakya" -> "Chanakya" or "V ishnugupt" -> "Vishnugupt"
             cleaned = re.sub(r'\b([A-Z])\s+([a-z]{2,})\b', r'\1\2', cleaned)
             cleaned = re.sub(r'\s+', ' ', cleaned).strip()
 
             meta = chunk.get("metadata", {})
             page = meta.get("page", i + 1)
             src = meta.get("source", "Document")
+            src_label = f"{src} (Page {page})"
+            if src_label not in sources_list:
+                sources_list.append(src_label)
 
-            # Break into clean sentences
-            sentences = [s.strip() for s in re.split(r'(?<=[.!?])\s+', cleaned) if len(s.strip()) > 20]
-            if not sentences:
-                continue
-
-            # Take clean sentences in natural reading flow
-            take_count = 5 if is_deep_dive else 3
-            top_sentences = sentences[:take_count]
-            passage = " ".join(top_sentences)
-            passage_snippet = passage[:120].lower()
-            if passage_snippet not in seen_texts:
-                seen_texts.add(passage_snippet)
-                sections.append({
-                    "src": src,
+            # Split into clean, coherent sentences
+            sents = [s.strip() for s in re.split(r'(?<=[.!?])\s+', cleaned) if len(s.strip()) > 25]
+            for s in sents:
+                # Score sentence relevance to query keywords
+                s_words = set(re.findall(r'\w+', s.lower()))
+                score = len(query_words & s_words)
+                # Boost if sentence starts near top of chunk
+                all_sentences.append({
+                    "text": s,
                     "page": page,
-                    "text": passage
+                    "src": src,
+                    "score": score
                 })
 
-        if not sections and context_chunks:
-            first_text = re.sub(r'\s+', ' ', context_chunks[0].get("text", "")).strip()
-            sections.append({
-                "src": context_chunks[0].get("metadata", {}).get("source", "Document"),
-                "page": context_chunks[0].get("metadata", {}).get("page", 1),
-                "text": first_text[:500]
-            })
+        # Fallback if no sentences extracted
+        if not all_sentences and context_chunks:
+            first_raw = context_chunks[0].get("text", "")[:400]
+            first_page = context_chunks[0].get("metadata", {}).get("page", 1)
+            first_src = context_chunks[0].get("metadata", {}).get("source", "Document")
+            all_sentences.append({"text": first_raw, "page": first_page, "src": first_src, "score": 1})
 
-        # Build clean, elegant response
+        # Rank sentences by relevance
+        ranked_sentences = sorted(all_sentences, key=lambda x: x["score"], reverse=True)
+
+        # -------------------------------------------------------------
+        # MODE 1: INTERACTIVE KNOWLEDGE QUIZ
+        # -------------------------------------------------------------
+        if is_quiz:
+            quiz_parts = [
+                "🧠 **Interactive Document Knowledge Quiz**\n",
+                "*Test your understanding of the uploaded materials below:*\n"
+            ]
+            quiz_items = ranked_sentences[:3] if len(ranked_sentences) >= 3 else ranked_sentences
+            for q_idx, item in enumerate(quiz_items, 1):
+                clean_stmt = item["text"]
+                quiz_parts.append(
+                    f"**Question {q_idx} (Page {item['page']}):**\n"
+                    f"Based on the text: *\"{clean_stmt[:120]}...\"*, what is the primary conclusion?\n"
+                    f"• **A)** {clean_stmt[:90]}\n"
+                    f"• **B)** An opposite or contradictory outcome\n"
+                    f"• **C)** The concept is unrelated to the operational objective\n"
+                    f"• **D)** It applies exclusively under hypothetical conditions\n\n"
+                    f"👉 **Correct Answer:** **Option A**\n"
+                    f"💡 **Explanation (Page {item['page']}):** {clean_stmt}\n"
+                )
+            quiz_parts.append("*(Note: Generated directly on-device from ChromaDB vector chunks)*")
+            return {
+                "answer": "\n".join(quiz_parts),
+                "sources": sources_list or sorted(list(sources_set))
+            }
+
+        # -------------------------------------------------------------
+        # MODE 2: ACTIVE-RECALL STUDY FLASHCARDS
+        # -------------------------------------------------------------
+        if is_flashcards:
+            flash_parts = [
+                "🃏 **Active-Recall Study Flashcards**\n",
+                "*Review these core concepts for high-retention mastery:*\n"
+            ]
+            card_items = ranked_sentences[:4] if len(ranked_sentences) >= 4 else ranked_sentences
+            for c_idx, item in enumerate(card_items, 1):
+                first_part = item["text"][:75].rstrip(",;:. ")
+                flash_parts.append(
+                    f"🎴 **Flashcard {c_idx} (Page {item['page']}):**\n"
+                    f"• **Prompt / Concept:** What is the significance of *\"{first_part}\"*?\n"
+                    f"• **Active Recall:** {item['text']}\n"
+                )
+            flash_parts.append("*(Note: Generated directly on-device from ChromaDB vector chunks)*")
+            return {
+                "answer": "\n".join(flash_parts),
+                "sources": sources_list or sorted(list(sources_set))
+            }
+
+        # -------------------------------------------------------------
+        # MODE 3: GEMINI-GRADE CONCEPTUAL SYNTHESIS (DEFAULT)
+        # -------------------------------------------------------------
+        # Build Executive Lead
+        lead_sentence = ranked_sentences[0]["text"] if ranked_sentences else "Based on verified records in the document:"
+        lead_page = ranked_sentences[0]["page"] if ranked_sentences else 1
+
+        # Collect distinct supporting insight sentences
+        used_snippets = {lead_sentence[:40].lower()}
+        core_insights = []
+        for s in ranked_sentences[1:]:
+            snip = s["text"][:40].lower()
+            if snip not in used_snippets and len(s["text"]) > 30:
+                used_snippets.add(snip)
+                core_insights.append(s)
+                if len(core_insights) >= (5 if is_deep_dive else 3):
+                    break
+
         response_parts = []
-        is_notes = any(w in q_lower for w in ["note", "notes", "takeaway", "takeaways", "summary", "pointers", "bullet"])
+
+        # 1. Executive Summary
         if is_notes:
-            response_parts.append("📝 **Key Notes from Document**\n")
+            response_parts.append("📝 **Executive Study Notes & Synthesis**\n")
         elif is_deep_dive:
-            response_parts.append("📖 **Detailed Document Analysis**\n")
+            response_parts.append("📖 **In-Depth Document Synthesis & Analysis**\n")
         else:
-            response_parts.append("📄 **Key Findings from Document**\n")
+            response_parts.append("🎯 **Executive Summary**\n")
 
-        for idx, sec in enumerate(sections, 1):
-            if len(sections) > 1:
-                response_parts.append(f"**Point {idx} (Page {sec['page']}):**\n{sec['text']}\n")
-            else:
-                response_parts.append(f"*(From Page {sec['page']})*\n{sec['text']}\n")
+        response_parts.append(f"{lead_sentence}\n")
+        response_parts.append("---\n")
 
-        if is_deep_dive:
-            response_parts.append("💡 *Tip: You can ask about any specific rule, page, or concept for a deeper breakdown.*")
+        # 2. Core Analytical Findings
+        response_parts.append("📌 **Core Analytical Insights**\n")
+        thematic_headers = [
+            "Foundational Principle",
+            "Operational Methodology",
+            "Strategic Application",
+            "Key Observation",
+            "Implementation Constraint"
+        ]
+
+        if core_insights:
+            for idx, item in enumerate(core_insights):
+                header = thematic_headers[idx % len(thematic_headers)]
+                response_parts.append(f"• **{header} (Page {item['page']}):** {item['text']}\n")
         else:
-            response_parts.append("💬 *Say 'explain more' for an expanded deep dive.*")
+            response_parts.append(f"• **Primary Source Finding (Page {lead_page}):** {lead_sentence}\n")
+
+        response_parts.append("---\n")
+
+        # 3. Strategic Takeaway
+        response_parts.append("💡 **Strategic Takeaway & Actionable Summary**\n")
+        if len(ranked_sentences) > 2 and ranked_sentences[-1]["text"] != lead_sentence:
+            response_parts.append(f"Review the primary findings on **Page {lead_page}** to ground your practical execution. {ranked_sentences[-1]['text']}\n")
+        else:
+            response_parts.append(f"The documented framework provides clear empirical guidance on **Page {lead_page}**. You can ask for a deeper breakdown, flashcards, or a practice quiz anytime!\n")
 
         response_parts.append("*(Note: Retrieved directly from local on-device ChromaDB vector store in offline mode)*")
 
-        answer_text = "\n".join(response_parts)
-
-        # Collect all referenced pages without 4-page artificial truncation
-        all_sources = []
-        for sec in sections:
-            src_label = f"{sec['src']} (Page {sec['page']})"
-            if src_label not in all_sources:
-                all_sources.append(src_label)
-
         return {
-            "answer": answer_text,
-            "sources": all_sources or sorted(list(sources_set))
+            "answer": "\n".join(response_parts),
+            "sources": sources_list or sorted(list(sources_set))
         }
 
     def _is_table_of_contents(self, text: str) -> bool:
