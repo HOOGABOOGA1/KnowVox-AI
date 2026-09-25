@@ -46,9 +46,9 @@ def extract_text_from_image(file_path: str) -> str:
         else:
             text = asyncio.run(_do_ocr(img))
 
-        return text or f"[Image uploaded: {p.name} - Visual diagram or illustration with no embedded text]"
+        return text or f"[Photo uploaded: {p.name} - Photograph or visual scene with no readable text]"
     except Exception as e:
-        return f"[Image uploaded: {p.name}]"
+        return f"[Photo uploaded: {p.name}]"
 
 
 def load_document_with_metadata(file_path: str) -> List[Dict[str, Any]]:

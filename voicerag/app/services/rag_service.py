@@ -40,13 +40,52 @@ class RAGService:
         query: str,
         context_chunks: Optional[List[Dict[str, Any]]] = None,
         conversation_history: Optional[List[Dict[str, str]]] = None,
-        user_profile: Optional[Dict[str, Any]] = None
+        user_profile: Optional[Dict[str, Any]] = None,
+        conversation_id: Optional[str] = None
     ) -> Dict[str, Any]:
         """
-        Generates a refined, context-grounded response with Career OS profile awareness.
+        Generates a refined, context-grounded response with Career OS profile awareness and Multimodal Vision.
         """
         current_api_key = self._get_api_key()
         sources_set = set()
+
+        # Check for attached image files to enable true Multimodal Vision
+        image_parts = []
+        from app.core.config import base_dir
+        uploads_dir = base_dir / "data" / "uploads"
+        if uploads_dir.exists():
+            for c in (context_chunks or []):
+                meta = c.get("metadata", {})
+                source = meta.get("source", "")
+                if any(source.lower().endswith(ext) for ext in [".png", ".jpg", ".jpeg", ".webp", ".bmp"]):
+                    found_img = None
+                    if conversation_id and (uploads_dir / f"{conversation_id}_{source}").exists():
+                        found_img = uploads_dir / f"{conversation_id}_{source}"
+                    elif (uploads_dir / source).exists():
+                        found_img = uploads_dir / source
+                    else:
+                        for cand in uploads_dir.glob(f"*{source}"):
+                            found_img = cand
+                            break
+
+                    if found_img and found_img.exists():
+                        try:
+                            import base64
+                            with open(found_img, "rb") as f:
+                                raw_bytes = f.read()
+                                if len(raw_bytes) < 15 * 1024 * 1024:
+                                    ext = found_img.suffix.lower()
+                                    mime = "image/jpeg" if ext in [".jpg", ".jpeg"] else ("image/png" if ext == ".png" else "image/webp")
+                                    b64_str = base64.b64encode(raw_bytes).decode("utf-8")
+                                    image_parts.append({
+                                        "inline_data": {
+                                            "mime_type": mime,
+                                            "data": b64_str
+                                        }
+                                    })
+                                    break
+                        except Exception:
+                            pass
 
         # 1. Format User Profile Context
         profile_str = "No user profile set."
@@ -118,6 +157,10 @@ class RAGService:
   Deliver the essential factual answer immediately. If the user wants a full breakdown, they will ask to "explain", "notes", "detail", or "expand"."""
             max_tokens = 320
 
+        vision_instruction = ""
+        if image_parts:
+            vision_instruction = "5. MULTIMODAL VISION ACTIVE: An image/photo has been attached to this query. Directly examine the attached image and describe, analyze, or explain its visual elements accurately to answer the user's prompt.\n"
+
         # 5. Refined Prompt with Career OS Profile & Grounded RAG
         prompt = f"""You are KnowVox, an intelligent, empathetic, articulate AI Career Copilot and Voice Knowledge Assistant.
 
@@ -136,12 +179,12 @@ USER QUESTION / PROMPT:
 BEHAVIOR GUIDELINES:
 1. {length_instruction}
 2. INTENT ROUTING:
-   - If the user asks about themselves, their career, roadmap, skills, education, or "my career info", "who am I", "what work should I do", answer DIRECTLY and PERSONALLY using their Career OS Profile facts. Do NOT force unrelated document context (such as PDFs about space science or other topics) into personal career questions.
-   - If the user asks for technical notes, tutorials, or study materials (e.g. "give me python notes", "dsa notes"), provide comprehensive, high-quality technical notes with key concepts and syntax examples.
-   - If the user asks a factual question about their uploaded documents, notes, or files, ground your answer directly in the facts from ATTACHED DOCUMENTS CONTEXT with citations.
+   - If the user asks about themselves, their career, roadmap, skills, education, or "my career info", "who am I", "what work should I do", answer DIRECTLY and PERSONALLY using their Career OS Profile facts. Do NOT force unrelated document context into personal career questions.
+   - If the user asks for technical notes, tutorials, or study materials, provide comprehensive, high-quality technical notes with key concepts and syntax examples.
+   - If the user asks about an uploaded image, photo, or document, ground your answer directly in the visual content or document text.
 3. Maintain an articulate, encouraging, and natural spoken tone suitable for real-time voice output.
 4. Do NOT append raw citation tags like "Source: doc.pdf" inside the speech text as sources are rendered separately in the UI.
-
+{vision_instruction}
 ANSWER:"""
 
         # 6. Generate response with cascading Gemini models & retry
@@ -150,6 +193,7 @@ ANSWER:"""
             candidate_models = [
                 "gemini-3.1-flash-lite",
                 target_model,
+                "gemini-3.8-flash",
                 "gemini-flash-lite-latest",
                 "gemini-3.6-flash"
             ]
@@ -160,8 +204,9 @@ ANSWER:"""
 
             for model_name in unique_models:
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={current_api_key}"
+                parts = [{"text": prompt}] + image_parts
                 payload = {
-                    "contents": [{"parts": [{"text": prompt}]}],
+                    "contents": [{"parts": parts}],
                     "generationConfig": {
                         "temperature": 0.3 if not is_detailed_requested else 0.4,
                         "topP": 0.95,
@@ -169,13 +214,13 @@ ANSWER:"""
                     }
                 }
                 try:
-                    response = requests.post(url, json=payload, timeout=12.0)
+                    response = requests.post(url, json=payload, timeout=14.0)
                     if response.status_code == 200:
                         data = response.json()
                         candidates = data.get("candidates", [])
                         if candidates and "content" in candidates[0] and "parts" in candidates[0]["content"]:
-                            parts = candidates[0]["content"]["parts"]
-                            answer_text = "".join([p.get("text", "") for p in parts]).strip()
+                            parts_resp = candidates[0]["content"]["parts"]
+                            answer_text = "".join([p.get("text", "") for p in parts_resp]).strip()
                             if answer_text:
                                 return {
                                     "answer": answer_text,
@@ -462,6 +507,21 @@ ANSWER:"""
             "tell me more", "expand", "break down", "comprehensive", "deep dive",
             "overview", "all laws", "rules", "why", "how"
         ])
+
+        # Check if the document context is an image/photo with no recognized text
+        for chunk in (context_chunks or []):
+            raw = chunk.get("text", "").lower()
+            if ("[photo uploaded:" in raw or "[image uploaded:" in raw) and ("no readable text" in raw or "visual scene" in raw or "no text" in raw):
+                img_name = chunk.get("metadata", {}).get("source", "Uploaded Photo")
+                return {
+                    "answer": (
+                        f"📷 **Uploaded Image Analysis ({img_name})**\n\n"
+                        f"This image is a real-world photograph/scene that contains **no embedded readable text or printed notes**.\n\n"
+                        f"• **On-Device Offline Status:** Offline mode uses local hardware OCR to extract printed text from study notes, textbook pages, code snippets, and presentation slides.\n"
+                        f"• **Visual Scene Recognition:** To analyze real-world scenes, identify people, objects, and visual illustrations in this photo, connect online to activate **Gemini Multimodal Vision**!"
+                    ),
+                    "sources": [f"{img_name} (Image)"]
+                }
 
         # Extract meaningful search keywords from query
         stop_words = {

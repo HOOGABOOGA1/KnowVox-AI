@@ -143,7 +143,7 @@ class DesktopBridgeAPI:
         try:
             profile_res = self.get_career_profile()
             user_profile = profile_res.get("profile") if profile_res.get("status") == "success" else None
-            result = self.rag.generate_answer(query, chunks, history or [], user_profile=user_profile)
+            result = self.rag.generate_answer(query, chunks, history or [], user_profile=user_profile, conversation_id=conv_id)
             answer = result.get("answer", "")
             sources = result.get("sources", [])
         except Exception as e:
@@ -236,7 +236,7 @@ class DesktopBridgeAPI:
 
             profile_res = self.get_career_profile()
             user_profile = profile_res.get("profile") if profile_res.get("status") == "success" else None
-            result = self.rag.generate_answer(transcription, chunks, history or [], user_profile=user_profile)
+            result = self.rag.generate_answer(transcription, chunks, history or [], user_profile=user_profile, conversation_id=conv_id)
             answer = result.get("answer", "")
             sources = result.get("sources", [])
 
