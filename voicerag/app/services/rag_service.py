@@ -238,7 +238,14 @@ ANSWER:"""
                     continue
 
         # 7. Smart Local / Offline Fallback
-        return self._generate_smart_fallback_answer(query, context_chunks, user_profile, sources_set, image_path=found_image_path)
+        return self._generate_smart_fallback_answer(
+            query,
+            context_chunks,
+            user_profile,
+            sources_set,
+            image_path=found_image_path,
+            conversation_history=conversation_history
+        )
 
     def _generate_smart_fallback_answer(
         self,
@@ -246,10 +253,30 @@ ANSWER:"""
         context_chunks: List[Dict[str, Any]],
         user_profile: Optional[Dict[str, Any]],
         sources_set: set,
-        image_path: Optional[Any] = None
+        image_path: Optional[Any] = None,
+        conversation_history: Optional[List[Dict[str, str]]] = None
     ) -> Dict[str, Any]:
         """Synthesize answer when offline or when the cloud API key/endpoint is unavailable."""
         q_lower = query.lower().strip()
+
+        # Check for Local Generative Small Language Model (Qwen2.5-0.5B-Instruct)
+        try:
+            from app.services.local_llm_service import get_local_llm_service
+            local_llm = get_local_llm_service()
+            is_special_template = any(w in q_lower for w in ["mock interview", "practice interview", "business pitch", "quiz", "flashcard"])
+            if local_llm.is_available() and not is_special_template:
+                gen_resp = local_llm.generate_response(
+                    query=query,
+                    context_chunks=context_chunks,
+                    user_profile=user_profile,
+                    conversation_history=conversation_history,
+                    max_new_tokens=350
+                )
+                if gen_resp and gen_resp.get("answer"):
+                    return gen_resp
+        except Exception:
+            pass
+
         user_name = (user_profile.get("name") if user_profile else None) or "there"
         cap_name = user_name.capitalize()
         edu = (user_profile.get("education") if user_profile else None) or "Professional Degree"
