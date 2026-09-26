@@ -51,7 +51,7 @@ class LocalLLMService:
             self.model = AutoModelForCausalLM.from_pretrained(
                 str(self.model_path),
                 local_files_only=True,
-                torch_dtype=torch.float32,
+                dtype=torch.float32,
                 low_cpu_mem_usage=True
             )
             self.model.eval()
